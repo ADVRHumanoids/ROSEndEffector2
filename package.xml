@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<package format="2">
+	<name>end_effector2</name>
+	<version>0.0.1</version>
+	<description>
+	End-Effector2 package: provides a ROS2-based set of standard interfaces to command robotics end-effectors in an agnostic fashion
+	</description>
+	<maintainer email="luca.muratore@iit.it">Luca Muratore</maintainer>
+	<maintainer email="davide.torielli@iit.it">Davide Torielli</maintainer>
+	<maintainer email="liana.bertoni@iit.it">Liana Bertoni</maintainer>
+	<license>Apache License 2.0</license>
+
+	<url type="website">https://advrhumanoids.github.io/ROSEndEffectorDocs/</url>
+	<url type="repository">https://github.com/ADVRHumanoids/ROSEndEffector2/</url>
+	<url type="bugtracker">https://github.com/ADVRHumanoids/ROSEndEffector2/issues/</url>
+  
+	<author>Davide Torielli</author>
+	<author>Liana Bertoni</author>
+	<author>Luca Muratore</author>
+	<author email="davide.torielli@iit.it">Davide Torielli</author>
+	<author email="liana.bertoni@iit.it">Liana Bertoni</author>
+	<author email="luca.muratore@iit.it">Luca Muratore</author>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+  
+	<!-- The *depend tags are used to specify dependencies -->
+	<!-- Dependencies can be catkin packages or system dependencies -->
+	<!-- Examples: -->
+	<!-- Use depend as a shortcut for packages that are both build and exec dependencies -->
+	<depend>rclcpp</depend>
+	<depend>rospy</depend>
+	<depend>srdfdom</depend>
+	<depend>moveit_ros_planning_interface</depend>
+	<depend>kdl_parser</depend>
+	<depend>rosee_msg</depend>
+	<depend>yaml-cpp</depend>
+	<depend>muparser</depend>
+
+	<!--   Note that this is equivalent to the following: -->
+	<!--   <build_depend>roscpp</build_depend> -->
+	<!--   <exec_depend>roscpp</exec_depend> -->
+	<!-- Use build_depend for packages you need at compile time: -->
+	<!-- Use build_export_depend for packages you need in order to build against this package: -->
+	<!--   <build_export_depend>message_generation</build_export_depend> -->
+	<!-- Use buildtool_depend for build tool packages: -->
+    <buildtool_depend>catkin</buildtool_depend>
+	<!-- Use exec_depend for packages you need at runtime: -->
+	<exec_depend>message_runtime</exec_depend>
+	<exec_depend>joint_state_publisher_gui</exec_depend>
+	<!-- Use test_depend for packages you need only for testing: -->
+	<test_depend>gtest</test_depend>
+	<!-- Use doc_depend for packages you need only for building documentation: -->
+	<doc_depend>doxygen</doc_depend>
+
+
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+	<build_type>ament_cmake</build_type>
+  </export>
+
+</package>

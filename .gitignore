@@ -1,0 +1,46 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+*.kdev4
+*.kate-swp
+build/
+
+# yaml generated files
+configs/actions/
+
+#rviz configs
+configs/rviz/
+
+#pdf generated from urdf
+configs/urdf/*.pdf
+configs/urdf/*.gv
