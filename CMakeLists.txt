@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(end_effector2)
+project(end_effector)
 
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
@@ -258,7 +258,8 @@ install(DIRECTORY include/
 ament_export_include_directories(include)
 
 install(DIRECTORY launch/
-  DESTINATION launch
+  #DESTINATION launch
+  DESTINATION share/${PROJECT_NAME}/
 )
 
 install(FILES
