@@ -17,7 +17,7 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(rospy REQUIRED)
+#find_package(rclpy REQUIRED) TODO necessary?
 find_package(srdfdom REQUIRED)
 find_package(kdl_parser REQUIRED)
 ###find_package(message_generation REQUIRED)  still necessary?                                                                   
@@ -133,7 +133,9 @@ add_executable(EEHalExecutor src/HAL/EEHalExecutor.cpp)
 ## Specify libraries to link a library or executable target against
 
 ament_target_dependencies(ROSEEParser
-#TODO add packages previously added with ${catkin_LIBRARIES}
+    rclcpp
+    kdl_parser
+    srdfdom
 )
 target_link_libraries(ROSEEParser
     yaml-cpp
@@ -180,7 +182,7 @@ ament_target_dependencies(ROSEERosServiceHandler
 # TODO this??add_dependencies(ROSEERosServiceHandler rosee_msg_generate_messages_cpp)
 
 ament_target_dependencies(ROSEEFindActions
-#TODO add packages previously added with ${catkin_LIBRARIES}  
+    moveit_ros_planning_interface
 )
 target_link_libraries(ROSEEFindActions
     ROSEEParserMoveIt
@@ -190,7 +192,7 @@ target_link_libraries(ROSEEFindActions
 )
 
 ament_target_dependencies(ROSEEParserMoveIt
-#TODO add packages previously added with ${catkin_LIBRARIES}  
+    moveit_ros_planning_interface
 )
 
 target_link_libraries(UniversalRosEndEffector
