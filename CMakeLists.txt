@@ -100,6 +100,10 @@ target_link_libraries(ROSEEParser
     yaml-cpp
 )
 
+target_link_libraries(ROSEEInterface
+    ROSEEParser
+)
+
 target_link_libraries(ROSEEYamlWorker
     yaml-cpp
     ROSEEActions
@@ -159,15 +163,6 @@ add_library(ROSEERosServiceHandler
     src/RosServiceHandler.cpp
 )
 list(APPEND libToInstall ROSEERosServiceHandler)
-
-
-ament_target_dependencies(ROSEEInterface
-#TODO add packages previously added with ${catkin_LIBRARIES}
-)
-target_link_libraries(ROSEEInterface
-    ROSEEParser
-)
-
 
 
 ament_target_dependencies(ROSEERosActionServer

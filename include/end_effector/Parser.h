@@ -18,12 +18,9 @@
 #ifndef __ROSEE_PARSER__
 #define __ROSEE_PARSER__
 
-
 #include <iostream>
 #include <fstream>
 #include <memory>
-
-
 
 #include <rclcpp/rclcpp.hpp>
 
