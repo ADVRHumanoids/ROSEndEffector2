@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+
+	<arg name="hand_name" description="the name of the hand, as defined in urdf and srdf files"/>
+    <arg name="gdb" default="false"/> <!-- for debug with gdb -->
+	<arg name="urdf_path" default="$(find-pkg-share end_effector)/configs/urdf/$(var hand_name).urdf"/>
+	<arg name="srdf_path" default="$(find-pkg-share end_effector)/configs/srdf/$(var hand_name).srdf"/>
+    <arg name="actions_folder_path" default="ROSEE/actions/$(var hand_name)/"/>
+
+	<node unless="$(var gdb)" exec="UniversalFindActions" name="UniversalFindActions" pkg="end_effector" output="screen">
+        <param name="urdf_path" value="$(var urdf_path)"/> 
+        <param name="srdf_path" value="$(var srdf_path)"/> 
+        <param name="actions_folder_path" value="$(var actions_folder_path)"/> 
+    </node>
+    
+    <!-- run with gdb for debug -->
+    <node if="$(var gdb)" exec="UniversalFindActions" name="UniversalFindActions" pkg="end_effector" output="screen" launch-prefix="xterm -e gdb --args" />
+</launch>
