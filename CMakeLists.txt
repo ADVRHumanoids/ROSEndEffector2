@@ -25,7 +25,6 @@ find_package(moveit_ros_planning_interface REQUIRED)
 #find_package(rosee_msg REQUIRED) rosee_msg2 ?
                                                                                
 find_package(Eigen3 REQUIRED)
-#TODO on my pc, find_package works. On iit pc, I need the find_library. Why?
 #find_package(muparser REQUIRED) 
 find_library(_MUPARSER_LIB muparser REQUIRED)
 find_package(yaml-cpp REQUIRED)
@@ -45,7 +44,7 @@ include_directories(
   ${EIGEN3_INCLUDE_DIRS}
 )
 
-
+######### Offline phase libs
 list(APPEND libToInstall)
 
 add_library(ROSEEParser
@@ -57,21 +56,6 @@ add_library(ROSEEInterface
     src/EEInterface.cpp
 )
 list(APPEND libToInstall ROSEEInterface)
-
-add_library(DummyHal
-     src/HAL/DummyHal.cpp
-)
-list(APPEND libToInstall DummyHal)
-
-add_library(EEHal
-     src/HAL/EEHal.cpp
-)
-list(APPEND libToInstall EEHal)
-
-add_library(UniversalRosEndEffectorExecutor
-    src/UniversalRosEndEffectorExecutor.cpp
-)
-list(APPEND libToInstall UniversalRosEndEffectorExecutor)
 
 add_library(ROSEEFindActions 
     src/FindActions.cpp
@@ -86,17 +70,6 @@ list(APPEND libToInstall ROSEEParserMoveIt)
 add_library(ROSEEYamlWorker
     src/YamlWorker.cpp
 )
-list(APPEND libToInstall ROSEEYamlWorker)
-
-add_library(ROSEERosActionServer
-    src/RosActionServer.cpp
-)
-list(APPEND libToInstall ROSEERosActionServer)
-
-add_library(ROSEERosServiceHandler
-    src/RosServiceHandler.cpp
-)
-list(APPEND libToInstall ROSEERosServiceHandler)
 
 add_library(ROSEEMapActionHandler
     src/MapActionHandler.cpp
@@ -118,20 +91,6 @@ add_library(ROSEEActions
 )
 list(APPEND libToInstall ROSEEActions)
 
-
-## Add cmake target dependencies of the library
-## as an example, code may need to be generated before libraries
-## either from message generation or dynamic reconfigure
-# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-add_executable(UniversalRosEndEffector src/UniversalRosEndEffector.cpp)
-add_executable(UniversalFindActions src/UniversalFindActions.cpp)
-add_executable(EEHalExecutor src/HAL/EEHalExecutor.cpp)
-# # add_dependencies(UniversalRosEndEffectorExecutor end_effector_generate_messages_cpp)
-# # add_dependencies(UniversalFindActions end_effector_generate_messages_cpp)
-
-## Specify libraries to link a library or executable target against
-
 ament_target_dependencies(ROSEEParser
     rclcpp
     kdl_parser
@@ -139,26 +98,6 @@ ament_target_dependencies(ROSEEParser
 )
 target_link_libraries(ROSEEParser
     yaml-cpp
-)
-
-ament_target_dependencies(ROSEEInterface
-#TODO add packages previously added with ${catkin_LIBRARIES}
-)
-target_link_libraries(ROSEEInterface
-    ROSEEParser
-)
-
-ament_target_dependencies(UniversalRosEndEffectorExecutor
-#TODO add packages previously added with ${catkin_LIBRARIES}  
-)
-target_link_libraries(UniversalRosEndEffectorExecutor
-    ROSEEParser
-    ROSEEInterface
-    ROSEEYamlWorker
-    ROSEEMapActionHandler
-    ROSEERosActionServer
-    ROSEERosServiceHandler
-    
 )
 
 target_link_libraries(ROSEEYamlWorker
@@ -171,16 +110,6 @@ target_link_libraries(ROSEEMapActionHandler
     ROSEEYamlWorker
 )
 
-ament_target_dependencies(ROSEERosActionServer
-#TODO add packages previously added with ${catkin_LIBRARIES}  
-)
-# TODO this?? add_dependencies(ROSEERosActionServer rosee_msg_generate_messages_cpp)
-
-ament_target_dependencies(ROSEERosServiceHandler
-#TODO add packages previously added with ${catkin_LIBRARIES}  
-)
-# TODO this??add_dependencies(ROSEERosServiceHandler rosee_msg_generate_messages_cpp)
-
 ament_target_dependencies(ROSEEFindActions
     moveit_ros_planning_interface
 )
@@ -192,20 +121,64 @@ target_link_libraries(ROSEEFindActions
 )
 
 ament_target_dependencies(ROSEEParserMoveIt
+    rclcpp
     moveit_ros_planning_interface
 )
 
-target_link_libraries(UniversalRosEndEffector
-    UniversalRosEndEffectorExecutor 
+ament_target_dependencies(ROSEEActions
+    moveit_ros_planning_interface
 )
 
-target_link_libraries(UniversalFindActions
-    ROSEEParserMoveIt
-    ROSEEParser
-    ROSEEFindActions
-    ROSEEActions
-    ROSEEMapActionHandler
+
+######### ONline phase libs
+#[[
+add_library(DummyHal
+     src/HAL/DummyHal.cpp
 )
+list(APPEND libToInstall DummyHal)
+
+add_library(EEHal
+     src/HAL/EEHal.cpp
+)
+list(APPEND libToInstall EEHal)
+
+add_library(UniversalRosEndEffectorExecutor
+    src/UniversalRosEndEffectorExecutor.cpp
+)
+list(APPEND libToInstall UniversalRosEndEffectorExecutor)
+
+
+list(APPEND libToInstall ROSEEYamlWorker)
+
+add_library(ROSEERosActionServer
+    src/RosActionServer.cpp
+)
+list(APPEND libToInstall ROSEERosActionServer)
+
+add_library(ROSEERosServiceHandler
+    src/RosServiceHandler.cpp
+)
+list(APPEND libToInstall ROSEERosServiceHandler)
+
+
+ament_target_dependencies(ROSEEInterface
+#TODO add packages previously added with ${catkin_LIBRARIES}
+)
+target_link_libraries(ROSEEInterface
+    ROSEEParser
+)
+
+
+
+ament_target_dependencies(ROSEERosActionServer
+#TODO add packages previously added with ${catkin_LIBRARIES}  
+)
+# TODO this?? add_dependencies(ROSEERosActionServer rosee_msg_generate_messages_cpp)
+
+ament_target_dependencies(ROSEERosServiceHandler
+#TODO add packages previously added with ${catkin_LIBRARIES}  
+)
+# TODO this??add_dependencies(ROSEERosServiceHandler rosee_msg_generate_messages_cpp)
 
 if (${matlogger2_FOUND})
 	ament_target_dependencies(EEHalExecutor
@@ -241,14 +214,56 @@ target_link_libraries(DummyHal
 )
 
 
+]]
+
+
+add_executable(UniversalFindActions src/UniversalFindActions.cpp)
+# add_dependencies(UniversalFindActions end_effector_generate_messages_cpp)
+target_link_libraries(UniversalFindActions
+    ROSEEParserMoveIt
+    ROSEEParser
+    ROSEEFindActions
+    ROSEEActions
+    ROSEEMapActionHandler
+)
+
+
+#[[
+add_executable(UniversalRosEndEffector src/UniversalRosEndEffector.cpp)
+add_executable(EEHalExecutor src/HAL/EEHalExecutor.cpp)
+# add_dependencies(UniversalRosEndEffectorExecutor end_effector_generate_messages_cpp)
+
+
+ament_target_dependencies(UniversalRosEndEffectorExecutor
+#TODO add packages previously added with ${catkin_LIBRARIES}  
+)
+target_link_libraries(UniversalRosEndEffectorExecutor
+    ROSEEParser
+    ROSEEInterface
+    ROSEEYamlWorker
+    ROSEEMapActionHandler
+    ROSEERosActionServer
+    ROSEERosServiceHandler
+    
+)
+
+target_link_libraries(UniversalRosEndEffector
+    UniversalRosEndEffectorExecutor 
+)
+
+]]
+
+
+
 #############
 ## Install ##
 #############
 
 # Mark executables and/or libraries for installation
-install(TARGETS UniversalRosEndEffector
+install(TARGETS 
                 UniversalFindActions
-                EEHalExecutor
+                #EEHalExecutor
+                #UniversalRosEndEffector
                 ${libToInstall} 
 		DESTINATION lib/${PROJECT_NAME}
 )
@@ -293,7 +308,7 @@ install(FILES
 ##############
 ### Testing ##
 ##############
-
+#[[
 if(BUILD_TESTING)
 
     # Add gtest based cpp test target and link libraries
@@ -410,7 +425,7 @@ if(BUILD_TESTING)
     )
                 
 endif()
-
+]]
 
 ################################# doxygen documentation
 
@@ -428,10 +443,5 @@ optional_build(documentation doc ON)
 
 
 
-ament_package(
-    INCLUDE_DIRS include
-#  LIBRARIES end_effector
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
-)
+ament_package()
 

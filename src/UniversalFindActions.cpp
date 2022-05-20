@@ -39,7 +39,7 @@ int main ( int argc, char **argv ) {
     node->set_parameter(rclcpp::Parameter("/robot_description_semantic", parser.getSrdfString()));
     RCLCPP_INFO_STREAM(node->get_logger(), "FINDACTIONS: Set urdf and srdf file in the param server");
     
-    std::shared_ptr <ROSEE::ParserMoveIt> parserMoveIt = std::make_shared <ROSEE::ParserMoveIt> ();
+    std::shared_ptr <ROSEE::ParserMoveIt> parserMoveIt = std::make_shared <ROSEE::ParserMoveIt> (node);
     if (! parserMoveIt->init ("robot_description") ) {
         RCLCPP_ERROR_STREAM (node->get_logger(), "FAILED parserMoveit Init, stopping execution");
         return -1;

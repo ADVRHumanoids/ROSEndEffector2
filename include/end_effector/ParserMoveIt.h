@@ -22,6 +22,8 @@
 #include <map>
 #include <iostream>
 
+#include <rclcpp/rclcpp.hpp>
+
 #include <moveit/robot_model_loader/robot_model_loader.h>
 
 //parse customized urdf with non linear mimic
@@ -40,7 +42,7 @@ public:
     typedef std::shared_ptr<ParserMoveIt> Ptr;
     typedef std::shared_ptr<const ParserMoveIt> ConstPtr;
 
-    ParserMoveIt();
+    ParserMoveIt( const rclcpp::Node::SharedPtr node);
     ~ParserMoveIt();
     
     /**
@@ -93,9 +95,9 @@ public:
     /** 
      * @brief the robot model can't be modified, if you want it to modify, use @ref getCopyModel 
      * to get a copy.
-     * @return const robot_model::RobotModelPtr a shared pointer to the robot model
+     * @return const moveit::core::RobotModelPtr a shared pointer to the robot model
      */
-    const robot_model::RobotModelPtr getRobotModel () const ;
+    const moveit::core::RobotModelPtr getRobotModel () const ;
     
     std::map < std::string, std::vector<std::string> > getFingertipsOfJointMap () const;
     std::map < std::string, std::vector<std::string> > getJointsOfFingertipMap () const;
@@ -125,9 +127,9 @@ public:
     /** 
      * @brief This function reload another model, same as the one loaded in \ref init but this one can be
      * modified externally, because it will not affect the internal structures of this class
-     * @return robot_model::RobotModelPtr a pointer to a new robot model created
+     * @return moveit::core::RobotModelPtr a pointer to a new robot model created
      */
-    robot_model::RobotModelPtr getCopyModel ( ) const;
+    moveit::core::RobotModelPtr getCopyModel ( ) const;
     
     /**
      * @brief This function explores all groups of srdf and says to which ones the linkName
@@ -247,8 +249,9 @@ public:
     
 private:
     
+    rclcpp::Node::SharedPtr node;
     std::string handName;
-    robot_model::RobotModelPtr robot_model;
+    moveit::core::RobotModelPtr robot_model;
     std::vector<std::string> fingertipNames;
     std::vector<std::string> activeJointNames;
     std::vector<std::string> passiveJointNames;

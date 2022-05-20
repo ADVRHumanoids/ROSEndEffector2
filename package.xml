@@ -28,11 +28,11 @@
 	<!-- Examples: -->
 	<!-- Use depend as a shortcut for packages that are both build and exec dependencies -->
 	<depend>rclcpp</depend>
-	<depend>rospy</depend>
+<!--	<depend>rclpy</depend>-->
 	<depend>srdfdom</depend>
 	<depend>moveit_ros_planning_interface</depend>
 	<depend>kdl_parser</depend>
-	<depend>rosee_msg</depend>
+<!--	<depend>rosee_msg</depend>-->
 	<depend>yaml-cpp</depend>
 	<depend>muparser</depend>
 
@@ -44,7 +44,6 @@
 	<!--   <build_export_depend>message_generation</build_export_depend> -->
 	<!-- Use buildtool_depend for build tool packages: -->
 	<!-- Use exec_depend for packages you need at runtime: -->
-	<exec_depend>message_runtime</exec_depend>
 	<exec_depend>joint_state_publisher_gui</exec_depend>
 	<!-- Use test_depend for packages you need only for testing: -->
 	<test_depend>gtest</test_depend>

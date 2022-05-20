@@ -362,9 +362,9 @@ bool ROSEE::Parser::configure() {
 bool ROSEE::Parser::init() {
 
     // try to retrive the path to config from the ROS param server TBD namespace should be take into account
-    if ( _nh.getParam ( "/urdf_path", _urdf_path ) && 
-         _nh.getParam ( "/srdf_path", _srdf_path ) &&
-         _nh.getParam ( "/actions_folder_path", _action_path )
+    if ( _node->get_parameter ( "/urdf_path", _urdf_path ) && 
+         _node->get_parameter ( "/srdf_path", _srdf_path ) &&
+         _node->get_parameter ( "/actions_folder_path", _action_path )
     ) {
 
         _is_initialized =  configure();
@@ -463,7 +463,7 @@ std::string ROSEE::Parser::getSrdfString() const {
 
 std::string ROSEE::Parser::getActionPath() const {
     return _action_path;
-};
+}
 
 
 

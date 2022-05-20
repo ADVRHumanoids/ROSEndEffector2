@@ -272,7 +272,7 @@ std::map < std::pair <std::string, std::string> , ROSEE::ActionPinchTight > ROSE
     acm.setEntry(parserMoveIt->getFingertipNames(), 
                  parserMoveIt->getFingertipNames(), false); //false== considered collisions
 
-    robot_state::RobotState kinematic_state(parserMoveIt->getRobotModel());
+    moveit::core::RobotState kinematic_state(parserMoveIt->getRobotModel());
         
     for (int i = 0; i < N_EXP_COLLISION; i++){
         
@@ -333,7 +333,7 @@ std::map < std::pair <std::string, std::string> , ROSEE::ActionPinchTight > ROSE
 
 void ROSEE::FindActions::checkDistances (std::map < std::pair <std::string, std::string> , ROSEE::ActionPinchLoose >* mapOfLoosePinches) {
         
-    robot_state::RobotState kinematic_state(parserMoveIt->getRobotModel());
+    moveit::core::RobotState kinematic_state(parserMoveIt->getRobotModel());
         
     for (int i = 0; i < N_EXP_DISTANCES; i++){
         
@@ -362,7 +362,7 @@ void ROSEE::FindActions::checkDistances (std::map < std::pair <std::string, std:
 
 void ROSEE::FindActions::removeBoundsOfNotCollidingTips ( 
     const std::map < std::pair <std::string, std::string> , ROSEE::ActionPinchLoose >* mapOfLoosePinches,
-    robot_model::RobotModelPtr kinematic_model_noBound) {
+    moveit::core::RobotModelPtr kinematic_model_noBound) {
 
     for (auto mapEl : *mapOfLoosePinches ) {
         
@@ -445,7 +445,7 @@ void ROSEE::FindActions::removeBoundsOfNotCollidingTips (
 void ROSEE::FindActions::checkWhichTipsCollideWithoutBounds (
     std::map < std::pair <std::string, std::string>, ROSEE::ActionPinchLoose >* mapOfLoosePinches ) {
     
-    robot_model::RobotModelPtr kinematic_model_noBound = parserMoveIt->getCopyModel();
+    moveit::core::RobotModelPtr kinematic_model_noBound = parserMoveIt->getCopyModel();
     
     removeBoundsOfNotCollidingTips (mapOfLoosePinches, kinematic_model_noBound );
 
@@ -468,7 +468,7 @@ void ROSEE::FindActions::checkWhichTipsCollideWithoutBounds (
     collision_request.contacts = true;  //set to compute collisions
     collision_request.max_contacts = 1000;
 
-    robot_state::RobotState kinematic_state(kinematic_model_noBound);
+    moveit::core::RobotState kinematic_state(kinematic_model_noBound);
 
     // similar to checkcollisions here, but we dont want to store anything, only check if collision happen
     std::set < std::pair<std::string, std::string> > collidingFingers ;
@@ -518,7 +518,7 @@ std::map<std::set<std::string>, ROSEE::ActionMultiplePinchTight> ROSEE::FindActi
     acm.setEntry(parserMoveIt->getFingertipNames(), 
                  parserMoveIt->getFingertipNames(), false); //false== considered collisions
 
-    robot_state::RobotState kinematic_state(parserMoveIt->getRobotModel());
+    moveit::core::RobotState kinematic_state(parserMoveIt->getRobotModel());
         
     for (int i = 0; i < N_EXP_COLLISION_MULTPINCH; i++){
         
@@ -702,7 +702,7 @@ bool ROSEE::FindActions::insertJointPosForTrigInMap ( std::map <std::string, Act
 /**********************************************  SUPPORT FUNCTIONS     ***************************************************************/
 
 
-ROSEE::JointPos ROSEE::FindActions::getConvertedJointPos(const robot_state::RobotState* kinematic_state) {
+ROSEE::JointPos ROSEE::FindActions::getConvertedJointPos(const moveit::core::RobotState* kinematic_state) {
     
     JointPos jp;
     for ( auto actJ : parserMoveIt->getActiveJointModels()) {

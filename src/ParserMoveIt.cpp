@@ -16,7 +16,9 @@
 
 #include <end_effector/ParserMoveIt.h>
 
-ROSEE::ParserMoveIt::ParserMoveIt() {
+ROSEE::ParserMoveIt::ParserMoveIt( const rclcpp::Node::SharedPtr node ) :
+    node ( node ) {
+    
 
 }
 
@@ -35,7 +37,7 @@ bool ROSEE::ParserMoveIt::init ( std::string robot_description, bool verbose ) {
     this->robot_description = robot_description;
     
     //false: we dont need kinematic solvers now
-    robot_model_loader::RobotModelLoader robot_model_loader(robot_description, false) ; 
+    robot_model_loader::RobotModelLoader robot_model_loader(node, robot_description, false) ; 
     robot_model = robot_model_loader.getModel() ;
     if (robot_model == nullptr) {
         std::cerr << " [PARSER::" << __func__ << 
@@ -90,7 +92,7 @@ unsigned int ROSEE::ParserMoveIt::getNFingers () const {
     return nFingers;
 }
 
-const robot_model::RobotModelPtr ROSEE::ParserMoveIt::getRobotModel () const {
+const moveit::core::RobotModelPtr ROSEE::ParserMoveIt::getRobotModel () const {
     return robot_model;
 }
 
@@ -184,8 +186,8 @@ std::map<std::string, std::map<std::string, std::string>> ROSEE::ParserMoveIt::g
 }
 
 
-robot_model::RobotModelPtr ROSEE::ParserMoveIt::getCopyModel() const {
-    robot_model_loader::RobotModelLoader robot_model_loader(robot_description); 
+moveit::core::RobotModelPtr ROSEE::ParserMoveIt::getCopyModel() const {
+    robot_model_loader::RobotModelLoader robot_model_loader(node, robot_description); 
     return robot_model_loader.getModel();
 }
 

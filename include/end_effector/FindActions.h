@@ -151,7 +151,7 @@ private:
      * @param kinematic_model_noBound the pointer to the robot model
      */
     void removeBoundsOfNotCollidingTips ( const std::map < std::pair <std::string, std::string> , ROSEE::ActionPinchLoose >* mapOfLoosePinches, 
-                                          robot_model::RobotModelPtr kinematic_model_noBound);
+                                          moveit::core::RobotModelPtr kinematic_model_noBound);
     
     /**
      * @brief function to "initialize" the map of ActionPinchLoose \p mapOfLoosePinches. 
@@ -259,7 +259,7 @@ private:
      * @param kinematic_state [in] pointer to the robot_state class
      * @return JointPos the map with the joint positions info
      */
-    JointPos getConvertedJointPos(const robot_state::RobotState* kinematic_state);
+    JointPos getConvertedJointPos(const moveit::core::RobotState* kinematic_state);
     
     
     /**
@@ -305,7 +305,7 @@ private:
      *   These three things are not present in the moveit setToRandomPositions. So we use the moveit one but then 
      *   we change a bit the things.
      */
-    void setToRandomPositions(robot_state::RobotState* kinematic_state);
+    void setToRandomPositions(moveit::core::RobotState* kinematic_state);
 
 
 };
