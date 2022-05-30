@@ -260,98 +260,32 @@ bool ROSEE::Parser::parseURDF() {
     }
 }
 
-/*
-bool ROSEE::Parser::getROSEndEffectorConfig() {
-
-    bool success = true;
-
-    // check if the ROSEE config path exists
-    std::ifstream fin ( _ros_ee_config_path );
-    if ( fin.fail() ) {
-
-        ROS_ERROR_STREAM ( "in " << __func__ << " : Can NOT open " << _ros_ee_config_path << "!" );
-        success = false;
-    } else {
-
-        // load the node for the _ros_ee_config_path
-        YAML::Node cfg = YAML::LoadFile ( _ros_ee_config_path );
-
-        // find the internal node ros_end_effector
-        YAML::Node ros_ee_node;
-        if ( cfg["ros_end_effector"] ) {
-
-            ros_ee_node = cfg["ros_end_effector"];
-        } else {
-
-            ROS_ERROR_STREAM ( "in " << __func__ << " : YAML file  " << _ros_ee_config_path << " does not contain ros_end_effector mandatory node!!" );
-            success = false;
-        }
-
-        // check the urdf_filename
-        if ( ros_ee_node["urdf_path"] ) {
-
-            // TBD relative path in more elegant way
-            _urdf_path = ROSEE::Utils::getPackagePath() + "/configs/" + ros_ee_node["urdf_path"].as<std::string>();
-            ROS_INFO_STREAM ( "ros_end_effector Parser found URDF path: " << _urdf_path );
-        } else {
-
-            ROS_ERROR_STREAM ( "in " << __func__ << " : ros_end_effector node of  " << _ros_ee_config_path << " does not contain urdf_path mandatory node!!" );
-            success = false;
-        }
-
-        // check the srdf_filename
-        if ( ros_ee_node["srdf_path"] ) {
-
-            // TBD relative path in more elegant way
-            _srdf_path = ROSEE::Utils::getPackagePath() + "/configs/" + ros_ee_node["srdf_path"].as<std::string>();
-            ROS_INFO_STREAM ( "ros_end_effector Parser found SRDF path: " << _srdf_path );
-        } else {
-
-            ROS_ERROR_STREAM ( "in " << __func__ << " : ros_end_effector node of  " << _ros_ee_config_path << " does not contain srdf_path mandatory node!!" );
-            success = false;
-        }
-        
-        if ( ros_ee_node["action_path"] ) {
-            _action_path = ROSEE::Utils::getPackagePath() + "/configs/" + ros_ee_node["action_path"].as<std::string>();
-            ROS_INFO_STREAM ( "ros_end_effector Parser found config folder for actions: " << _action_path );
-
-        }
-    }
-
-    return success;
-}
-*/
-
 
 bool ROSEE::Parser::configure() {
 
     bool ret = true;
-    //if ( getROSEndEffectorConfig() ) {
 
-        if ( parseURDF() ) {
+    if ( parseURDF() ) {
+        
+        if ( parseSRDF() ) {
             
-            if ( parseSRDF() ) {
-                
-                RCLCPP_INFO_STREAM (_node->get_logger(), "ROSEndEffector Parser successfully configured using urdf file:  " << _urdf_path 
-                    << "\n\t srdf file: " << _srdf_path << "\n\t actions folder " << _action_path
-                );
-            
-            } else {
-            
-                RCLCPP_ERROR_STREAM (_node->get_logger(), "ROSEndEffector Parser error while parsing SRDF");
-                ret = false;
-            }
-            
+            RCLCPP_INFO_STREAM (_node->get_logger(), "ROSEndEffector Parser successfully configured using urdf file:  " << _urdf_path 
+                << "\n\t srdf file: " << _srdf_path << "\n\t actions folder " << _action_path
+            );
+        
         } else {
-            
-            RCLCPP_ERROR_STREAM (_node->get_logger(), "ROSEndEffector Parser error while parsing URDF");
+        
+            RCLCPP_ERROR_STREAM (_node->get_logger(), "ROSEndEffector Parser error while parsing SRDF");
             ret = false;
         }
+        
+    } else {
+        
+        RCLCPP_ERROR_STREAM (_node->get_logger(), "ROSEndEffector Parser error while parsing URDF");
+        ret = false;
+    }
 
-    //} else {
 
-    //    ret = false;
-    //}
 
 
     return ret;
@@ -360,13 +294,19 @@ bool ROSEE::Parser::configure() {
 
 
 bool ROSEE::Parser::init() {
+    
+    // in ROS2, param must be declare first to be find
+    _node->declare_parameter ( "urdf_path", "" );
+    _node->declare_parameter ( "srdf_path", "" );
+    _node->declare_parameter ( "actions_folder_path", "" );
 
-    // try to retrive the path to config from the ROS param server TBD namespace should be take into account
-    if ( _node->get_parameter ( "/urdf_path", _urdf_path ) && 
-         _node->get_parameter ( "/srdf_path", _srdf_path ) &&
-         _node->get_parameter ( "/actions_folder_path", _action_path )
+    if ( _node->get_parameter ( "urdf_path", _urdf_path ) && 
+         _node->get_parameter ( "srdf_path", _srdf_path ) &&
+         _node->get_parameter ( "actions_folder_path", _action_path )
     ) {
 
+        _action_path = std::string(getenv("HOME")) + "/" + _action_path;
+        
         _is_initialized =  configure();
         return _is_initialized;
     }
@@ -377,6 +317,7 @@ bool ROSEE::Parser::init() {
 
 }
 
+
 bool ROSEE::Parser::init ( const std::string& urdf_path, const std::string& srdf_path, const std::string& action_path ) {
 
     _urdf_path = urdf_path;
@@ -386,6 +327,7 @@ bool ROSEE::Parser::init ( const std::string& urdf_path, const std::string& srdf
     _is_initialized =  configure();
     return _is_initialized;
 }
+
 
 void ROSEE::Parser::printEndEffectorFingerJointsMap() const {
 

@@ -32,11 +32,17 @@ int main ( int argc, char **argv ) {
     auto node = rclcpp::Node::make_shared("FindActions");
 
     ROSEE::Parser parser(node);
-    parser.init();
-    
+    if (! parser.init() ) {
+        RCLCPP_ERROR_STREAM (node->get_logger(), "FAILED parser Init, stopping execution");
+        return -1;
+    }
+
     //Params
-    node->set_parameter(rclcpp::Parameter("/robot_description", parser.getUrdfString()));
-    node->set_parameter(rclcpp::Parameter("/robot_description_semantic", parser.getSrdfString()));
+    node->declare_parameter("robot_description", "");
+    node->declare_parameter("robot_description_semantic", "");
+    
+    node->set_parameter(rclcpp::Parameter("robot_description", parser.getUrdfString()));
+    node->set_parameter(rclcpp::Parameter("robot_description_semantic", parser.getSrdfString()));
     RCLCPP_INFO_STREAM(node->get_logger(), "FINDACTIONS: Set urdf and srdf file in the param server");
     
     std::shared_ptr <ROSEE::ParserMoveIt> parserMoveIt = std::make_shared <ROSEE::ParserMoveIt> (node);
@@ -49,7 +55,7 @@ int main ( int argc, char **argv ) {
 
     
     std::string folderForActions = parser.getActionPath();
-    
+        
     ROSEE::FindActions actionsFinder (parserMoveIt);
 
     auto maps = actionsFinder.findPinch(folderForActions + "/primitives/");
