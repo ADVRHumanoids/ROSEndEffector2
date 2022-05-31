@@ -17,6 +17,7 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
 #find_package(rclpy REQUIRED) TODO necessary?
 find_package(srdfdom REQUIRED)
 find_package(kdl_parser REQUIRED)
@@ -70,6 +71,7 @@ list(APPEND libToInstall ROSEEParserMoveIt)
 add_library(ROSEEYamlWorker
     src/YamlWorker.cpp
 )
+list(APPEND libToInstall ROSEEYamlWorker)
 
 add_library(ROSEEMapActionHandler
     src/MapActionHandler.cpp
@@ -157,7 +159,6 @@ ament_target_dependencies(EEHal
 target_link_libraries(EEHal 
     yaml-cpp
 )
-# TODO this? add_dependencies(EEHal rosee_msg_generate_messages_cpp)
 
 ament_target_dependencies(DummyHal
     rclcpp
@@ -168,15 +169,12 @@ target_link_libraries(DummyHal
     EEHal 
 )
 
-
-#[[
+## Main online stuff
 add_library(UniversalRosEndEffectorExecutor
     src/UniversalRosEndEffectorExecutor.cpp
 )
 list(APPEND libToInstall UniversalRosEndEffectorExecutor)
 
-
-list(APPEND libToInstall ROSEEYamlWorker)
 
 add_library(ROSEERosActionServer
     src/RosActionServer.cpp
@@ -190,19 +188,18 @@ list(APPEND libToInstall ROSEERosServiceHandler)
 
 
 ament_target_dependencies(ROSEERosActionServer
-#TODO add packages previously added with ${catkin_LIBRARIES}  
+    rclcpp 
+    rosee_msg
+    rclcpp_action
 )
 # TODO this?? add_dependencies(ROSEERosActionServer rosee_msg_generate_messages_cpp)
 
 ament_target_dependencies(ROSEERosServiceHandler
-#TODO add packages previously added with ${catkin_LIBRARIES}  
+    rclcpp
+    rosee_msg
 )
 # TODO this??add_dependencies(ROSEERosServiceHandler rosee_msg_generate_messages_cpp)
 
-
-
-
-]]
 
 
 add_executable(UniversalFindActions src/UniversalFindActions.cpp)
@@ -218,7 +215,7 @@ target_link_libraries(UniversalFindActions
 
 add_executable(EEHalExecutor src/HAL/EEHalExecutor.cpp)
 ament_target_dependencies(EEHalExecutor
-    #TODO add packages previously added with ${catkin_LIBRARIES}  
+    rclcpp  
 )
 if (${matlogger2_FOUND})
     target_link_libraries(EEHalExecutor
@@ -234,13 +231,13 @@ else()
     )
 endif(${matlogger2_FOUND})
 
-#[[
+
 add_executable(UniversalRosEndEffector src/UniversalRosEndEffector.cpp)
 # add_dependencies(UniversalRosEndEffectorExecutor end_effector_generate_messages_cpp)
 
 
 ament_target_dependencies(UniversalRosEndEffectorExecutor
-#TODO add packages previously added with ${catkin_LIBRARIES}  
+    rclcpp
 )
 target_link_libraries(UniversalRosEndEffectorExecutor
     ROSEEParser
@@ -256,7 +253,6 @@ target_link_libraries(UniversalRosEndEffector
     UniversalRosEndEffectorExecutor 
 )
 
-]]
 
 
 
