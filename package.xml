@@ -32,9 +32,10 @@
 	<depend>srdfdom</depend>
 	<depend>moveit_ros_planning_interface</depend>
 	<depend>kdl_parser</depend>
-<!--	<depend>rosee_msg</depend>-->
+	<depend>rosee_msg</depend>
 	<depend>yaml-cpp</depend>
 	<depend>muparser</depend>
+	<depend>Boost</depend>
 
 	<!--   Note that this is equivalent to the following: -->
 	<!--   <build_depend>roscpp</build_depend> -->

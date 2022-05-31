@@ -5,7 +5,7 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  #add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 ##test code coverage
@@ -20,9 +20,9 @@ find_package(rclcpp REQUIRED)
 #find_package(rclpy REQUIRED) TODO necessary?
 find_package(srdfdom REQUIRED)
 find_package(kdl_parser REQUIRED)
-###find_package(message_generation REQUIRED)  still necessary?                                                                   
 find_package(moveit_ros_planning_interface REQUIRED)
-#find_package(rosee_msg REQUIRED) rosee_msg2 ?
+find_package(rosee_msg REQUIRED)
+find_package(Boost REQUIRED filesystem system)
                                                                                
 find_package(Eigen3 REQUIRED)
 #find_package(muparser REQUIRED) 
@@ -135,7 +135,9 @@ ament_target_dependencies(ROSEEActions
 
 
 ######### ONline phase libs
-#[[
+
+###Hal libs 
+
 add_library(DummyHal
      src/HAL/DummyHal.cpp
 )
@@ -146,6 +148,28 @@ add_library(EEHal
 )
 list(APPEND libToInstall EEHal)
 
+
+ament_target_dependencies(EEHal
+	rclcpp
+	rosee_msg
+	sensor_msgs
+)
+target_link_libraries(EEHal 
+    yaml-cpp
+)
+# TODO this? add_dependencies(EEHal rosee_msg_generate_messages_cpp)
+
+ament_target_dependencies(DummyHal
+    rclcpp
+	rosee_msg 
+	sensor_msgs
+)
+target_link_libraries(DummyHal
+    EEHal 
+)
+
+
+#[[
 add_library(UniversalRosEndEffectorExecutor
     src/UniversalRosEndEffectorExecutor.cpp
 )
@@ -175,38 +199,7 @@ ament_target_dependencies(ROSEERosServiceHandler
 )
 # TODO this??add_dependencies(ROSEERosServiceHandler rosee_msg_generate_messages_cpp)
 
-if (${matlogger2_FOUND})
-	ament_target_dependencies(EEHalExecutor
-		#TODO add packages previously added with ${catkin_LIBRARIES}  
-	)
-    target_link_libraries(EEHalExecutor
-        EEHal
-        matlogger2::matlogger2
-    )
-    
-else()
-	ament_target_dependencies(EEHalExecutor
-		#TODO add packages previously added with ${catkin_LIBRARIES}  
-	)
-    target_link_libraries(EEHalExecutor
-        EEHal
-    )
-endif(${matlogger2_FOUND})
 
-ament_target_dependencies(EEHal
-	#TODO add packages previously added with ${catkin_LIBRARIES}  
-)
-target_link_libraries(EEHal 
-    yaml-cpp
-)
-# TODO this? add_dependencies(EEHal rosee_msg_generate_messages_cpp)
-
-ament_target_dependencies(DummyHal
-	#TODO add packages previously added with ${catkin_LIBRARIES}  
-)
-target_link_libraries(DummyHal
-    EEHal 
-)
 
 
 ]]
@@ -223,9 +216,26 @@ target_link_libraries(UniversalFindActions
 )
 
 
+add_executable(EEHalExecutor src/HAL/EEHalExecutor.cpp)
+ament_target_dependencies(EEHalExecutor
+    #TODO add packages previously added with ${catkin_LIBRARIES}  
+)
+if (${matlogger2_FOUND})
+    target_link_libraries(EEHalExecutor
+        EEHal
+        matlogger2::matlogger2
+        ${Boost_LIBRARIES}
+    )
+    
+else()
+    target_link_libraries(EEHalExecutor
+        EEHal
+        ${Boost_LIBRARIES}
+    )
+endif(${matlogger2_FOUND})
+
 #[[
 add_executable(UniversalRosEndEffector src/UniversalRosEndEffector.cpp)
-add_executable(EEHalExecutor src/HAL/EEHalExecutor.cpp)
 # add_dependencies(UniversalRosEndEffectorExecutor end_effector_generate_messages_cpp)
 
 

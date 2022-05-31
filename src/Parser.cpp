@@ -305,7 +305,7 @@ bool ROSEE::Parser::init() {
          _node->get_parameter ( "actions_folder_path", _action_path )
     ) {
 
-        _action_path = std::string(getenv("HOME")) + "/" + _action_path;
+        //_action_path = std::string(getenv("HOME")) + "/" + _action_path;
         
         _is_initialized =  configure();
         return _is_initialized;

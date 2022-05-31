@@ -5,7 +5,7 @@
     <arg name="gdb" default="false"/> <!-- for debug with gdb -->
 	<arg name="urdf_path" default="$(find-pkg-prefix end_effector)/configs/urdf/$(var hand_name).urdf"/>
 	<arg name="srdf_path" default="$(find-pkg-prefix end_effector)/configs/srdf/$(var hand_name).srdf"/>
-    <arg name="actions_folder_path" default="ROSEE2/actions/$(var hand_name)/"/>
+    <arg name="actions_folder_path" default="$(env HOME)/ROSEE2/actions/$(var hand_name)/"/>
 
 	<node unless="$(var gdb)" exec="UniversalFindActions" name="UniversalFindActions" pkg="end_effector" output="screen">
         <param name="urdf_path" value="$(var urdf_path)"/> 

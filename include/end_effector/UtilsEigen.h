@@ -2,7 +2,7 @@
 #define __ROSEE_UTILS_EIGEN__
 
 #include <Eigen/Dense>
-#include <std_msgs/msg/Float32MultiArray.hpp>
+#include <example_interfaces/msg/float32_multi_array.hpp>
 
 namespace ROSEE
 {
@@ -16,9 +16,9 @@ namespace Utils
  * eigen matrix that can be row major (even by default eigen matrix is column major,
  * it can be templatizate specifing the row major)
  */
-static std_msgs::msg::Float32MultiArray eigenMatrixToFloat32MultiArray (Eigen::MatrixXd eigenMatrix) {
+static example_interfaces::msg::Float32MultiArray eigenMatrixToFloat32MultiArray (Eigen::MatrixXd eigenMatrix) {
     
-    std_msgs::msg::Float32MultiArray rosMatrix;
+    example_interfaces::msg::Float32MultiArray rosMatrix;
     
     unsigned int nRow = eigenMatrix.rows();
     unsigned int nCol = eigenMatrix.cols();
@@ -29,8 +29,8 @@ static std_msgs::msg::Float32MultiArray eigenMatrixToFloat32MultiArray (Eigen::M
         return rosMatrix;
     }
     
-    rosMatrix.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    rosMatrix.layout.dim.push_back(std_msgs::MultiArrayDimension());
+    rosMatrix.layout.dim.push_back(example_interfaces::msg::MultiArrayDimension());
+    rosMatrix.layout.dim.push_back(example_interfaces::msg::MultiArrayDimension());
     rosMatrix.layout.dim[0].label = "column";
     rosMatrix.layout.dim[0].size = nCol;
     rosMatrix.layout.dim[0].stride = nCol*nRow;
