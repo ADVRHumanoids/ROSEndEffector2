@@ -8,7 +8,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 #   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-#option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+option(BUILD_TESTING "Build tests" ON)
 
 ##test code coverage
 option(ROSEE_ENABLE_COVERAGE "Compile with coverage information" ON)
@@ -321,23 +321,25 @@ install(FILES
 ##############
 ### Testing ##
 ##############
-#[[
+
 if(BUILD_TESTING)
 
     # Add gtest based cpp test target and link libraries
     #catkin_add_gtest(EEInterface_test test/test_ee_interface.cpp)
     add_executable(EEInterface_test test/test_ee_interface.cpp)
     ament_target_dependencies(EEInterface_test
-		#TODO add packages previously added with ${catkin_LIBRARIES}  
+		rclcpp
+		sensor_msgs
 	)
     target_link_libraries(EEInterface_test
                                            ROSEEParser
                                            ROSEEInterface
-                                           gtest)
+                                           gtest
+                                            ${Boost_LIBRARIES})
                                            
     add_executable(FindPinches_test test/test_find_pinches.cpp)
     ament_target_dependencies(FindPinches_test
-		#TODO add packages previously added with ${catkin_LIBRARIES}  
+		rclcpp
 	)
     target_link_libraries(FindPinches_test
                                             ROSEEFindActions
@@ -346,7 +348,7 @@ if(BUILD_TESTING)
                                             
     add_executable(FindTrigs_test test/test_find_trigs.cpp)
 	ament_target_dependencies(FindTrigs_test
-		#TODO add packages previously added with ${catkin_LIBRARIES}  
+		rclcpp
 	)
     target_link_libraries(FindTrigs_test
                                          ROSEEFindActions
@@ -355,7 +357,7 @@ if(BUILD_TESTING)
                                          
     add_executable(ComposedAction_test test/test_composedAction.cpp)
     ament_target_dependencies(ComposedAction_test
-		#TODO add packages previously added with ${catkin_LIBRARIES}  
+		rclcpp  
 	)
     target_link_libraries(ComposedAction_test
                                               ROSEEFindActions
@@ -364,7 +366,7 @@ if(BUILD_TESTING)
                                               
     add_executable(TimedAction_test test/test_timedAction.cpp)
     ament_target_dependencies(TimedAction_test
-		#TODO add packages previously added with ${catkin_LIBRARIES}  
+		rclcpp 
 	)
     target_link_libraries(TimedAction_test
                                               ROSEEFindActions
@@ -373,7 +375,9 @@ if(BUILD_TESTING)
                                               
     add_executable(SendAction_test test/test_send_action.cpp)
     ament_target_dependencies(SendAction_test
-		#TODO add packages previously added with ${catkin_LIBRARIES}  
+		rclcpp
+		rosee_msg
+		rclcpp_action
 	)
     target_link_libraries(SendAction_test
                                               ROSEEActions
@@ -385,7 +389,8 @@ if(BUILD_TESTING)
                                               
     add_executable(ServiceHandler_test test/test_service_handler.cpp)
     ament_target_dependencies(ServiceHandler_test
-		#TODO add packages previously added with ${catkin_LIBRARIES}  
+		rclcpp
+		rosee_msg
 	)
     target_link_libraries(ServiceHandler_test
                                               gtest
@@ -438,7 +443,7 @@ if(BUILD_TESTING)
     )
                 
 endif()
-]]
+
 
 ################################# doxygen documentation
 
