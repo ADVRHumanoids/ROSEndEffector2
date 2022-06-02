@@ -20,7 +20,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
-#find_package(rclpy REQUIRED) TODO necessary?
+find_package(rclpy REQUIRED)
 find_package(srdfdom REQUIRED)
 find_package(kdl_parser REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
@@ -285,6 +285,12 @@ install(DIRECTORY launch/
   DESTINATION launch
   DESTINATION share/${PROJECT_NAME}/launch/
 )
+
+install(PROGRAMS 
+    scripts/send_action.py 
+    DESTINATION lib/${PROJECT_NAME}
+)
+
 
 install(FILES
   configs/urdf/heri_II.urdf

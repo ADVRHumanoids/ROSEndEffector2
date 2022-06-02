@@ -70,7 +70,7 @@ rclcpp_action::GoalResponse ROSEE::RosActionServer::handle_goal(
     
     wantedNormError = actual_goal.goal_action.error_norm == 0 ? DEFAULT_ERROR_NORM : actual_goal.goal_action.error_norm;
 
-    RCLCPP_INFO (_node->get_logger(),"ROSACTION SERVER received goal: '%s'", this->actual_goal.goal_action.action_name);
+    RCLCPP_INFO (_node->get_logger(),"ROSACTION SERVER received goal: '%s'", this->actual_goal.goal_action.action_name.c_str());
     (void)uuid;
     
     return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
