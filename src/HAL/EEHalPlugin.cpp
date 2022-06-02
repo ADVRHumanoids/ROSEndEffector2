@@ -15,18 +15,18 @@
  * limitations under the License.
 */
 
-#include <end_effector/HAL/EEHal.h>
+#include <end_effector/HAL/EEHalPlugin.h>
 
-ROSEE::EEHal::EEHal(rclcpp::Node* node) {
+void ROSEE::EEHalPlugin::initialize(rclcpp::Node::SharedPtr node) {
     
     _node = node;
     
     //init sub to receive reference from UniversalROSEEEX
     //TODO take topic name from roslaunch
-    std::string motor_reference_topic  = "/ros_end_effector/motor_reference_pos";
-
-    _motor_reference_sub = _node->create_subscription<sensor_msgs::msg::JointState>(motor_reference_topic, 10,
-                                          std::bind(&ROSEE::EEHal::motor_reference_clbk, this, _1));
+    std::string motor_reference_topic  = "motor_reference_pos";
+    
+    _motor_reference_sub = _node->create_subscription<sensor_msgs::msg::JointState>(motor_reference_topic, 1,
+                                          std::bind(&ROSEE::EEHalPlugin::motor_reference_clbk, this, _1));
     
     std::string joint_state_topic = "/ros_end_effector/joint_states";
     
@@ -44,20 +44,20 @@ ROSEE::EEHal::EEHal(rclcpp::Node* node) {
     
 }
 
-bool ROSEE::EEHal::checkCommandPub() {
+bool ROSEE::EEHalPlugin::checkCommandPub() {
     
     return (_node->count_publishers(_motor_reference_sub->get_topic_name()) > 0 && _mr_msg.name.size() != 0);
 }
 
-bool ROSEE::EEHal::isHandInfoPresent() { return _hand_info_present; }
+bool ROSEE::EEHalPlugin::isHandInfoPresent() { return _hand_info_present; }
 
-void ROSEE::EEHal::motor_reference_clbk(const sensor_msgs::msg::JointState::SharedPtr msg) {
+void ROSEE::EEHalPlugin::motor_reference_clbk(const sensor_msgs::msg::JointState::SharedPtr msg) {
     
     _mr_msg = *msg;
     
 }
 
-bool ROSEE::EEHal::publish_joint_state() {
+bool ROSEE::EEHalPlugin::publish_joint_state() {
     
     //NOTE _js_msg must be filled by the derived class
     _joint_state_pub->publish(_js_msg);
@@ -66,7 +66,7 @@ bool ROSEE::EEHal::publish_joint_state() {
     
 }
 
-bool ROSEE::EEHal::getFingersNames(std::vector<std::string> &fingers_names){
+bool ROSEE::EEHalPlugin::getFingersNames(std::vector<std::string> &fingers_names){
     
     if (this->fingers_names.size() != 0) {
     
@@ -78,83 +78,78 @@ bool ROSEE::EEHal::getFingersNames(std::vector<std::string> &fingers_names){
     }
     
 }
-bool ROSEE::EEHal::getMotorsNames(std::vector<std::string> &motors_names){
+bool ROSEE::EEHalPlugin::getMotorsNames(std::vector<std::string> &motors_names){
     
     if (this->motors_names.size() != 0) {
     
         motors_names = this->motors_names;
         return true;
 
-    } else {
-        return false;
-    }
+    } 
     
+    return false;
 }
 
-bool ROSEE::EEHal::getMotorStiffness(Eigen::VectorXd &motors_stiffness){
+bool ROSEE::EEHalPlugin::getMotorStiffness(Eigen::VectorXd &motors_stiffness){
     
     if (this->motors_stiffness.size() != 0) {
     
         motors_stiffness = this->motors_stiffness;
         return true;
 
-    } else {
-        return false;
-    }
+    } 
     
+    return false;
 }
 
-bool ROSEE::EEHal::getTipsFrictions(Eigen::VectorXd &tips_frictions){
+bool ROSEE::EEHalPlugin::getTipsFrictions(Eigen::VectorXd &tips_frictions){
     
     if (this->tips_frictions.size() != 0) {
     
         tips_frictions = this->tips_frictions;
         return true;
 
-    } else {
-        return false;
     }
     
+    return false; 
 }
 
-bool ROSEE::EEHal::getMotorTorqueLimits(Eigen::VectorXd &motors_torque_limits){
+bool ROSEE::EEHalPlugin::getMotorTorqueLimits(Eigen::VectorXd &motors_torque_limits){
     
     if (this->motors_torque_limits.size() != 0) {
     
         motors_torque_limits = this->motors_torque_limits;
         return true;
 
-    } else {
-        return false;
     }
-    
+    return false;
 }
 
-bool ROSEE::EEHal::getTipJointToTipFrameX(Eigen::VectorXd &tip_joint_to_tip_frame_x) {
+bool ROSEE::EEHalPlugin::getTipJointToTipFrameX(Eigen::VectorXd &tip_joint_to_tip_frame_x) {
    
     if (this->tip_joint_to_tip_frame_x.size() != 0) {
 
         tip_joint_to_tip_frame_x = this->tip_joint_to_tip_frame_x;
         return true;
 
-    } else {
-        return false;
-    }  
+    } 
+    return false;
 }
 
-bool ROSEE::EEHal::getTipJointToTipFrameY(Eigen::VectorXd &tip_joint_to_tip_frame_y) {
+bool ROSEE::EEHalPlugin::getTipJointToTipFrameY(Eigen::VectorXd &tip_joint_to_tip_frame_y) {
    
     if (this->tip_joint_to_tip_frame_y.size() != 0) {
 
         tip_joint_to_tip_frame_y = this->tip_joint_to_tip_frame_y;
         return true;
 
-    } else {
-        return false;
-    }  
+    } 
+    
+    return false;
+ 
 }
 
-bool ROSEE::EEHal::parseHandInfo() {
+bool ROSEE::EEHalPlugin::parseHandInfo() {
     
     std::string _rosee_config_path;
     _node->declare_parameter("ros_ee_config_path", "");
@@ -215,7 +210,7 @@ bool ROSEE::EEHal::parseHandInfo() {
     return true;
 }
 
-bool ROSEE::EEHal::init_hand_info_response() {
+bool ROSEE::EEHalPlugin::init_hand_info_response() {
     
     _hand_info_response.fingers_names = fingers_names;
     
@@ -233,14 +228,14 @@ bool ROSEE::EEHal::init_hand_info_response() {
     return true;
 }
 
-bool ROSEE::EEHal::setHandInfoCallback() {
+bool ROSEE::EEHalPlugin::setHandInfoCallback() {
     
     _hand_info_server = _node->create_service<rosee_msg::srv::HandInfo>(_hand_info_service_name, 
-                                                                        std::bind(&ROSEE::EEHal::handInfoEEHalCallback, this, _1, _2));
+                                                                        std::bind(&ROSEE::EEHalPlugin::handInfoEEHalCallback, this, _1, _2));
     return true;
 }
 
-bool ROSEE::EEHal::handInfoEEHalCallback (
+bool ROSEE::EEHalPlugin::handInfoEEHalCallback (
     const std::shared_ptr<rosee_msg::srv::HandInfo::Request> request,
     std::shared_ptr<rosee_msg::srv::HandInfo::Response> response) {
    
@@ -251,7 +246,7 @@ bool ROSEE::EEHal::handInfoEEHalCallback (
     return true;
 }
 
-bool ROSEE::EEHal::initPressureSensing()
+bool ROSEE::EEHalPlugin::initPressureSensing()
 {
     
     std::string topic_name = "/ros_end_effector/pressure_phalanges";
@@ -263,7 +258,7 @@ bool ROSEE::EEHal::initPressureSensing()
     return true;
 }
 
-bool ROSEE::EEHal::publish_pressure() {
+bool ROSEE::EEHalPlugin::publish_pressure() {
     
     //NOTE _pressure_msg must be filled by the derived class
     _pressure_pub->publish(_pressure_msg);
@@ -272,11 +267,11 @@ bool ROSEE::EEHal::publish_pressure() {
     
 }
 
-Eigen::VectorXd ROSEE::EEHal::getMotorReference() const {
+Eigen::VectorXd ROSEE::EEHalPlugin::getMotorReference() const {
     
     Eigen::VectorXd motorRef;
     motorRef.resize(_mr_msg.name.size());
-    for (int i=0; i<_mr_msg.name.size(); i++ ) {
+    for (size_t i=0; i<_mr_msg.name.size(); i++ ) {
         
         motorRef(i) = _mr_msg.position.at(i);
     }
@@ -284,11 +279,11 @@ Eigen::VectorXd ROSEE::EEHal::getMotorReference() const {
     return motorRef;
 }
 
-Eigen::VectorXd ROSEE::EEHal::getJointPosition() const {
+Eigen::VectorXd ROSEE::EEHalPlugin::getJointPosition() const {
 
     Eigen::VectorXd jointPos;
     jointPos.resize(_js_msg.name.size());
-    for (int i=0; i<_js_msg.name.size(); i++ ) {
+    for (size_t i=0; i<_js_msg.name.size(); i++ ) {
         
         jointPos(i) = _js_msg.position.at(i);
     }
@@ -296,11 +291,11 @@ Eigen::VectorXd ROSEE::EEHal::getJointPosition() const {
     return jointPos;
 }
 
-Eigen::VectorXd ROSEE::EEHal::getJointEffort() const {
+Eigen::VectorXd ROSEE::EEHalPlugin::getJointEffort() const {
 
     Eigen::VectorXd jointEffort;
     jointEffort.resize(_js_msg.name.size());
-    for (int i=0; i<_js_msg.name.size(); i++ ) {
+    for (size_t i=0; i<_js_msg.name.size(); i++ ) {
         
         jointEffort(i) = _js_msg.effort.at(i);
     }
@@ -308,11 +303,11 @@ Eigen::VectorXd ROSEE::EEHal::getJointEffort() const {
     return jointEffort;
 }
 
-Eigen::MatrixXd ROSEE::EEHal::getPressure() const {
+Eigen::MatrixXd ROSEE::EEHalPlugin::getPressure() const {
 
     Eigen::MatrixXd pressure;
     pressure.resize(4, _pressure_msg.pressure_finger1.size()); //message has 4 finger field
-    for (int i=0; i<_pressure_msg.pressure_finger1.size(); i++ ) {
+    for (size_t i=0; i<_pressure_msg.pressure_finger1.size(); i++ ) {
 
         pressure(0, i) = _pressure_msg.pressure_finger1.at(i);
         pressure(1, i) = _pressure_msg.pressure_finger2.at(i);

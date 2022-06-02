@@ -3,7 +3,8 @@
 
 #include <rclcpp/rclcpp.hpp>
 
-#include <end_effector/HAL/EEHal.h>
+#include <end_effector/HAL/EEHalPlugin.h>
+#include <pluginlib/class_loader.hpp>
 
 #ifdef _MATLOGGER2
     #include <matlogger2/matlogger2.h>
@@ -14,7 +15,7 @@ int main ( int argc, char **argv ) {
     
     rclcpp::init(argc, argv);
     auto node = rclcpp::Node::make_shared("EEHalExecutor");
-    
+
     std::string hal_lib;
     node->declare_parameter("hal_library_name", "");
     if (!  node->get_parameter("hal_library_name", hal_lib) ) {
@@ -42,17 +43,21 @@ int main ( int argc, char **argv ) {
     }
 #endif
 
-    std::unique_ptr<ROSEE::EEHal> eeHalPtr = ROSEE::Utils::loadObject<ROSEE::EEHal>
-                                         (hal_lib, "create_object_"+hal_lib, &node);
+    pluginlib::ClassLoader<ROSEE::EEHalPlugin> eeHalLoader("end_effector", "ROSEE::EEHalPlugin");
+
+    std::shared_ptr<ROSEE::EEHalPlugin> eeHalPtr = eeHalLoader.createSharedInstance(hal_lib);
 
     if (eeHalPtr == nullptr) {
         RCLCPP_ERROR_STREAM(node->get_logger(), "[EEHalExecutor ERROR] in loading the EEHal Object" );
         return -1;    
     }
     
-    RCLCPP_ERROR_STREAM(node->get_logger(), "[EEHalExecutor] Loaded "<<  hal_lib << " HAL"  );   
+    eeHalPtr->initialize(node);
     
-    if (eeHalPtr->isHandInfoPresent()) { 
+    RCLCPP_INFO_STREAM(node->get_logger(), "[EEHalExecutor] Loaded "<<  hal_lib << " HAL"  );   
+    
+    if ( eeHalPtr->isHandInfoPresent() ) 
+    { 
         eeHalPtr->init_hand_info_response();
         eeHalPtr->setHandInfoCallback();
     }

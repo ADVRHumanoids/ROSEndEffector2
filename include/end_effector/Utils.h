@@ -216,7 +216,7 @@ struct DifferentKeysException : public std::exception {
 /**
  * @brief Utils to dynamically load an object. This is used to dynamically load 
  *  a derived object from a node that only knows the base interface. 
- *  For example, we call the create_object(ros::nodeHandle) method of a derived EEHAL class
+ *  For example, we call the create_object(rclcpp::Node node) method of a derived EEHAL class
  *  The object must be a library which will return a RetType pointer with the \p function_name
  *  This function will "convert" to smart pointer for convenience
  * @param lib_name the name of the compiled library (eg DummyHal). Do not add the suffix .so
@@ -239,6 +239,7 @@ std::unique_ptr<RetType> loadObject(std::string lib_name,
 
     //clear old errors
     dlerror();
+    std::cout << "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" << std::endl;
 
     void* lib_handle = dlopen(lib_name_path.c_str(), RTLD_LAZY);
     auto error = dlerror();
@@ -251,6 +252,9 @@ std::unique_ptr<RetType> loadObject(std::string lib_name,
     //clear old errors
     dlerror();
     
+    std::cout << "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" << std::endl;
+
+    
     RetType* (*function)(Args... args);
     function = reinterpret_cast<RetType* (*)(Args... args)>(dlsym(lib_handle, function_name.c_str()));
     error = dlerror();
@@ -258,13 +262,17 @@ std::unique_ptr<RetType> loadObject(std::string lib_name,
         std::cerr << "[Utils::loadObject] ERROR in returning the function: " << error << std::endl;
         return nullptr;
     }
-    
+        std::cout << "ccccccccccccccccccccccccccccccccccccccccccccccccc" << std::endl;
+
     RetType* objectRaw = function(args...);
-    
+            std::cout << "ddddddddddddddddddddddddddddd" << std::endl;
+
     std::unique_ptr<RetType> objectPtr(objectRaw);
-    
+            std::cout << "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee" << std::endl;
+
     dlclose(lib_handle);
-    
+            std::cout << "fffffffffffffffffffffffffffffff" << std::endl;
+
     return objectPtr;
 }
 

@@ -1,0 +1,5 @@
+<library path="libDummyHalPlugin">
+  <class type="ROSEE::DummyHalPlugin" base_class_type="ROSEE::EEHalPlugin">
+    <description>DummyHal</description>
+  </class>
+</library>

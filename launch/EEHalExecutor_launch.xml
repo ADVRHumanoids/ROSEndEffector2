@@ -25,7 +25,6 @@
         <!-- Output -->
         <remap from="joint_states" to="/dummyHal/joint_states" />
         
-
     </node>
     
 <!--    //TODO -->

@@ -37,6 +37,7 @@
 	<depend>yaml-cpp</depend>
 	<depend>muparser</depend>
 	<depend>Boost</depend>
+	<depend>pluginlib</depend>
 
 	<!--   Note that this is equivalent to the following: -->
 	<!--   <build_depend>roscpp</build_depend> -->

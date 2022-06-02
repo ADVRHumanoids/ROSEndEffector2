@@ -22,13 +22,14 @@ ROSEE::UniversalRosEndEffectorExecutor::UniversalRosEndEffectorExecutor ( std::s
     
     _node = rclcpp::Node::make_shared(ns);
 
-    _node->declare_parameter("rate", "");
+    _node->declare_parameter("rate", 0.0);
     if ( ! _node->get_parameter ( "rate", _rate ) ) {
         RCLCPP_INFO_STREAM (_node->get_logger(), "Ros parameter for rate not found, I'm setting the default rate of 100 Hz" );
         _rate = 100.0;
     }
     
     _time = 0.0;
+    _period = 1.0/_rate;
 
     ROSEE::Parser p ( _node );
     p.init (); //TBD check return

@@ -15,8 +15,8 @@
  * limitations under the License.
 */
 
-#ifndef __ROSEE_EE_HAL__
-#define __ROSEE_EE_HAL__
+#ifndef __ROSEE_EE_HAL_PLUGIN__
+#define __ROSEE_EE_HAL_PLUGIN__
 
 
 #include <rclcpp/rclcpp.hpp>
@@ -30,7 +30,6 @@
 
 #include <Eigen/Dense>
 #include <yaml-cpp/yaml.h>
-#include <end_effector/Utils.h>
 #include <end_effector/UtilsEigen.h>
 
 #include <end_effector/UtilsYAML.h>
@@ -41,12 +40,6 @@
 using std::placeholders::_1;
 using std::placeholders::_2;
 
-//Macro to be used in each concrete HAL that will define the create_object functions
-#define HAL_CREATE_OBJECT(className) \
-    extern "C" ::ROSEE::EEHal* create_object_##className ( rclcpp::Node* node) { \
-        return new className(node); \
-    } \
-
 namespace ROSEE {
     
     
@@ -54,15 +47,15 @@ namespace ROSEE {
      * @brief Class representing an end-effector
      * 
      */
-    class EEHal  {
+    class EEHalPlugin  {
 
     public:
         
-        typedef std::shared_ptr<EEHal> Ptr;
-        typedef std::shared_ptr<const EEHal> ConstPtr;
+        typedef std::shared_ptr<EEHalPlugin> Ptr;
+        typedef std::shared_ptr<const EEHalPlugin> ConstPtr;
         
-        EEHal ( rclcpp::Node* node );
-        virtual ~EEHal() {};
+        virtual void initialize(rclcpp::Node::SharedPtr node) = 0;
+        virtual ~EEHalPlugin() {};
                 
         virtual bool sense() = 0;
         
@@ -123,7 +116,9 @@ namespace ROSEE {
 
     protected:
         
-        rclcpp::Node* _node;
+        EEHalPlugin (){};
+        
+        rclcpp::Node::SharedPtr _node;
         
         /**
          * The references that must be read in the move() to send to the real/simulated robot
@@ -168,4 +163,4 @@ namespace ROSEE {
     };
 }
 
-#endif // __ROSEE_EE_HAL__
+#endif // __ROSEE_EE_HAL_PLUGIN__

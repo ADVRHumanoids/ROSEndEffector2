@@ -15,28 +15,28 @@
  * limitations under the License.
 */
 
-#include <end_effector/HAL/DummyHal.h>
+#include <end_effector/HAL/DummyHalPlugin.h>
 
-ROSEE::DummyHal::DummyHal ( rclcpp::Node *node) : EEHal ( node ) {
+void ROSEE::DummyHalPlugin::initialize (rclcpp::Node::SharedPtr node) {
     
-    std::string out;
+    ROSEE::EEHalPlugin::initialize(node);
     
     _hal_joint_state_pub = _node->create_publisher<sensor_msgs::msg::JointState>("/dummyHal/joint_command", 1);
-    _hal_joint_state_sub = _node->create_subscription<sensor_msgs::msg::JointState>("/dummyHal/joint_states", 1, std::bind(&ROSEE::DummyHal::hal_js_clbk, this,_1));
+    _hal_joint_state_sub = _node->create_subscription<sensor_msgs::msg::JointState>("/dummyHal/joint_states", 1, std::bind(&ROSEE::DummyHalPlugin::hal_js_clbk, this,_1));
 }
 
 
-bool ROSEE::DummyHal::sense() {
+bool ROSEE::DummyHalPlugin::sense() {
     //do nothing, it is the hal_js_clbk who "sense"
     return true;
 }
 
-bool ROSEE::DummyHal::move() {
+bool ROSEE::DummyHalPlugin::move() {
     _hal_joint_state_pub->publish(_mr_msg);
     return true;
 }
 
-void ROSEE::DummyHal::hal_js_clbk(const sensor_msgs::msg::JointState::SharedPtr msg) {
+void ROSEE::DummyHalPlugin::hal_js_clbk(const sensor_msgs::msg::JointState::SharedPtr msg) {
     
     _js_msg = *msg;
 }

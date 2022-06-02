@@ -15,12 +15,12 @@
  * limitations under the License.
 */
 
-#ifndef __ROSEE_DUMMY_HAL__
-#define __ROSEE_DUMMY_HAL__
+#ifndef __ROSEE_DUMMY_HAL_PLUGIN__
+#define __ROSEE_DUMMY_HAL_PLUGIN__
 
 #include <rclcpp/rclcpp.hpp>
 
-#include <end_effector/HAL/EEHal.h>
+#include <end_effector/HAL/EEHalPlugin.h>
 
 #include <string>
 #include <memory>
@@ -31,16 +31,15 @@ namespace ROSEE {
      * @brief Class representing an end-effector
      * 
      */
-    class DummyHal : public EEHal {
+    class DummyHalPlugin : public EEHalPlugin {
 
     public:
         
-        typedef std::shared_ptr<DummyHal> Ptr;
-        typedef std::shared_ptr<const DummyHal> ConstPtr;
+        typedef std::shared_ptr<DummyHalPlugin> Ptr;
+        typedef std::shared_ptr<const DummyHalPlugin> ConstPtr;
         
-        DummyHal( rclcpp::Node* node);
-        virtual ~DummyHal() {};
-        
+        void initialize(rclcpp::Node::SharedPtr node) override;
+                
         virtual bool sense() override;
         virtual bool move() override;
       
@@ -58,7 +57,9 @@ namespace ROSEE {
         
     };
     
-HAL_CREATE_OBJECT(DummyHal)    
 }
 
-#endif // __ROSEE_DUMMY_HAL__
+#include <pluginlib/class_list_macros.hpp>
+PLUGINLIB_EXPORT_CLASS(ROSEE::DummyHalPlugin, ROSEE::EEHalPlugin)
+
+#endif // __ROSEE_DUMMY_HAL_PLUGIN__

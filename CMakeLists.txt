@@ -5,8 +5,10 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  #add_compile_options(-Wall -Wextra -Wpedantic)
+#   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
+
+#option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 
 ##test code coverage
 option(ROSEE_ENABLE_COVERAGE "Compile with coverage information" ON)
@@ -24,6 +26,7 @@ find_package(kdl_parser REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rosee_msg REQUIRED)
 find_package(Boost REQUIRED filesystem system)
+find_package(pluginlib REQUIRED)
                                                                                
 find_package(Eigen3 REQUIRED)
 #find_package(muparser REQUIRED) 
@@ -140,34 +143,33 @@ ament_target_dependencies(ROSEEActions
 
 ###Hal libs 
 
-add_library(DummyHal
-     src/HAL/DummyHal.cpp
+add_library(EEHalPlugin SHARED
+     src/HAL/EEHalPlugin.cpp
 )
-list(APPEND libToInstall DummyHal)
-
-add_library(EEHal
-     src/HAL/EEHal.cpp
-)
-list(APPEND libToInstall EEHal)
-
-
-ament_target_dependencies(EEHal
+ament_target_dependencies(EEHalPlugin
 	rclcpp
 	rosee_msg
 	sensor_msgs
 )
-target_link_libraries(EEHal 
+target_link_libraries(EEHalPlugin 
     yaml-cpp
 )
+list(APPEND libToInstall EEHalPlugin)
 
-ament_target_dependencies(DummyHal
+add_library(DummyHalPlugin SHARED
+    src/HAL/DummyHalPlugin.cpp
+)
+ament_target_dependencies(DummyHalPlugin
     rclcpp
 	rosee_msg 
 	sensor_msgs
 )
-target_link_libraries(DummyHal
-    EEHal 
+target_link_libraries(DummyHalPlugin
+    EEHalPlugin
 )
+pluginlib_export_plugin_description_file(end_effector plugins.xml)
+list(APPEND libToInstall DummyHalPlugin)
+
 
 ## Main online stuff
 add_library(UniversalRosEndEffectorExecutor
@@ -216,17 +218,19 @@ target_link_libraries(UniversalFindActions
 add_executable(EEHalExecutor src/HAL/EEHalExecutor.cpp)
 ament_target_dependencies(EEHalExecutor
     rclcpp  
+    rosee_msg
+    pluginlib
 )
 if (${matlogger2_FOUND})
     target_link_libraries(EEHalExecutor
-        EEHal
+        EEHalPlugin
         matlogger2::matlogger2
         ${Boost_LIBRARIES}
     )
     
 else()
     target_link_libraries(EEHalExecutor
-        EEHal
+        EEHalPlugin
         ${Boost_LIBRARIES}
     )
 endif(${matlogger2_FOUND})
@@ -238,6 +242,7 @@ add_executable(UniversalRosEndEffector src/UniversalRosEndEffector.cpp)
 
 ament_target_dependencies(UniversalRosEndEffectorExecutor
     rclcpp
+    rosee_msg
 )
 target_link_libraries(UniversalRosEndEffectorExecutor
     ROSEEParser
@@ -262,11 +267,12 @@ target_link_libraries(UniversalRosEndEffector
 
 # Mark executables and/or libraries for installation
 install(TARGETS 
-                UniversalFindActions
-                #EEHalExecutor
-                #UniversalRosEndEffector
-                ${libToInstall} 
-		DESTINATION lib/${PROJECT_NAME}
+    UniversalFindActions
+    EEHalExecutor
+    UniversalRosEndEffector
+    ${libToInstall} 
+    DESTINATION lib/${PROJECT_NAME}
+    EXPORT export_${PROJECT_NAME}
 )
 
 ## Mark cpp header files for installation
@@ -276,8 +282,8 @@ install(DIRECTORY include/
 ament_export_include_directories(include)
 
 install(DIRECTORY launch/
-  #DESTINATION launch
-  DESTINATION share/${PROJECT_NAME}/
+  DESTINATION launch
+  DESTINATION share/${PROJECT_NAME}/launch/
 )
 
 install(FILES
@@ -290,7 +296,7 @@ install(FILES
   configs/urdf/test_ee_spread.urdf
   configs/urdf/two_finger.urdf
   configs/urdf/two_finger_mimic.urdf
-  DESTINATION configs/urdf
+  DESTINATION share/${PROJECT_NAME}/configs/urdf
 )
 
 install(FILES
@@ -303,7 +309,7 @@ install(FILES
   configs/srdf/test_ee_spread.srdf
   configs/srdf/two_finger.srdf
   configs/srdf/two_finger_mimic.srdf
-  DESTINATION configs/srdf
+  DESTINATION share/${PROJECT_NAME}/configs/srdf
 )
 
 ##############
@@ -442,6 +448,12 @@ endmacro(optional_build name path ONOFF)
 
 optional_build(documentation doc ON)
 
+ament_export_libraries(
+  end_effector
+)
+ament_export_targets(
+  export_${PROJECT_NAME}
+)
 
 
 ament_package()

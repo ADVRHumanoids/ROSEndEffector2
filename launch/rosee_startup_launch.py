@@ -1,0 +1,125 @@
+import launch
+from launch.substitutions import Command, LaunchConfiguration, EnvironmentVariable, PathJoinSubstitution, FindExecutable, TextSubstitution
+from launch import LaunchDescription, LaunchContext, LaunchService
+from launch.actions import DeclareLaunchArgument
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+import launch_ros
+import os
+from ament_index_python.packages import get_package_share_directory
+
+
+
+def launchconfiguration_to_string(context: LaunchContext, launchConfig):
+    return context.perform_substitution(launchConfig)
+    
+
+def generate_launch_description():
+    
+    rosee_pkg = launch_ros.substitutions.FindPackageShare(package='end_effector')
+    
+    #hand_name = LaunchConfiguration('hand_name')
+    #hand_name_launch_arg = DeclareLaunchArgument('hand_name')
+    hand_name = "test_ee"
+    
+    urdf_file_name = 'test_ee.urdf'
+    srdf_file_name = 'test_ee.srdf'
+    
+    gazebo = LaunchConfiguration('gazebo')
+    gazebo_launch_arg = DeclareLaunchArgument('gazebo', default_value='False')
+    gdb = LaunchConfiguration('gdb')
+    gdb_launch_arg = DeclareLaunchArgument('gdb', default_value='False')
+    hal_lib = LaunchConfiguration('hal_lib')
+    hal_lib_launch_arg = DeclareLaunchArgument('hal_lib', default_value='DummyHal')
+    matlogger_path = LaunchConfiguration('matlogger_path')
+    matlogger_path_launch_arg = DeclareLaunchArgument('matlogger_path', default_value='')
+    actions_folder_path = LaunchConfiguration('actions_folder_path')
+    actions_folder_path_launch_arg = DeclareLaunchArgument('actions_folder_path', default_value=[os.getenv('HOME'), '/ROSEE2/actions/', hand_name, '/'])
+    
+    urdf_path = os.path.join(
+        get_package_share_directory('end_effector'),
+        "configs",
+        "urdf",
+        urdf_file_name)
+    srdf_path = os.path.join(
+        get_package_share_directory('end_effector'),
+        "configs",
+        "srdf",
+        srdf_file_name)
+    
+    with open(urdf_path, 'r') as infp:
+        robot_description = infp.read()
+        
+    with open(srdf_path, 'r') as infp:
+        robot_description_semantic = infp.read()
+
+            
+    return LaunchDescription([
+        
+        #hand_name_launch_arg,
+        gazebo_launch_arg,
+        gdb_launch_arg,
+        hal_lib_launch_arg,
+        matlogger_path_launch_arg,
+        actions_folder_path_launch_arg,
+        
+        launch_ros.actions.Node(
+            package='end_effector',
+            executable='UniversalRosEndEffector',
+            name='UniversalRosEndEffector',
+            output='screen',
+            parameters=[
+                {'robot_description': robot_description},
+                {'robot_description_semantic': robot_description_semantic},
+                {'urdf_path': urdf_path},
+                {'srdf_path': srdf_path},
+                {'actions_folder_path': actions_folder_path},
+                {'primitive_aggregated_srv_name': "primitives_aggregated_available"},
+                {'selectable_finger_pair_info': "selectable_finger_pair_info"},
+                {'grasping_action_srv_name': "grasping_action_srv_name"},
+                {'hand_info': "hand_info"},
+                {'new_grasping_action_srv_name': "new_grasping_action_srv_name"},
+                {'rosAction_grasping_command': "action_command"},
+                {'rate': 100.0},
+            ],
+        ),
+        
+        launch.actions.IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    rosee_pkg,
+                    'launch',
+                    'EEHalExecutor_launch.py'
+                ])
+            ]),
+            launch_arguments={
+                'gazebo': gazebo,
+                'hand_name': hand_name,
+                'hal_lib': hal_lib,
+                'gdb': gdb,
+                'matlogger_path': matlogger_path,
+            }.items()
+        ),
+        
+        launch_ros.actions.Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='screen',
+            parameters=[
+                {'robot_description': robot_description},
+                {'publish_frequency': 200.0}
+            ],
+            remappings=[
+                ("joint_states", "/dummyHal/joint_states")
+            ]
+        ),
+            
+        launch_ros.actions.Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            output='screen',
+            arguments=['-d', [rosee_pkg, '/configs/rviz/', hand_name, '.rviz']],
+        )
+
+    ])
