@@ -43,6 +43,8 @@ protected:
 
     virtual void SetUp() override {
         
+        node = rclcpp::Node::make_shared("testSendAction");        
+        
         std::string robot_name = "";
         node->declare_parameter("robot_name","");
         node->get_parameter("robot_name", robot_name);

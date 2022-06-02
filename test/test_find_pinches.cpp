@@ -25,7 +25,9 @@ protected:
 
     virtual void SetUp() override {
     
-        std::shared_ptr <ROSEE::ParserMoveIt> parserMoveIt = std::make_shared <ROSEE::ParserMoveIt> ();
+        node = rclcpp::Node::make_shared("testFindPinches");
+        
+        std::shared_ptr <ROSEE::ParserMoveIt> parserMoveIt = std::make_shared <ROSEE::ParserMoveIt> (node);
         //if return false, models are not found and it is useless to continue the test
         ASSERT_TRUE(parserMoveIt->init ("robot_description", false)) ;
         ROSEE::FindActions actionsFinder (parserMoveIt);
@@ -52,6 +54,9 @@ protected:
     virtual void TearDown() {
     }
 
+    rclcpp::Node::SharedPtr node;
+
+    
     std::map < std::pair < std::string, std::string >, ROSEE::ActionPinchTight > pinchMap;
     std::map < std::set < std::string >, std::shared_ptr<ROSEE::ActionPrimitive> > pinchParsedMap;
     
@@ -399,7 +404,6 @@ int main ( int argc, char **argv ) {
         std::cout << "[TEST ERROR] Prepare Funcion failed" << std::endl;
         return -1;
     }
-    
     
     ::testing::InitGoogleTest ( &argc, argv );
     return RUN_ALL_TESTS();

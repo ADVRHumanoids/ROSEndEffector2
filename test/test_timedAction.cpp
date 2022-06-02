@@ -25,7 +25,9 @@ protected:
 
     virtual void SetUp() override {
         
-        std::shared_ptr <ROSEE::ParserMoveIt> parserMoveIt = std::make_shared <ROSEE::ParserMoveIt> ();
+        node = rclcpp::Node::make_shared("testTimedAction");        
+        
+        std::shared_ptr <ROSEE::ParserMoveIt> parserMoveIt = std::make_shared <ROSEE::ParserMoveIt> (node);
 
         //if return false, models are not found and it is useless to continue the test
         ASSERT_TRUE(parserMoveIt->init ("robot_description", false)) ;
@@ -86,6 +88,8 @@ protected:
 
     virtual void TearDown() override{
     }
+    
+    rclcpp::Node::SharedPtr node;
     
     ROSEE::ActionTrig::Map trigMap;
     ROSEE::ActionPinchTight::Map pinchTightMap;

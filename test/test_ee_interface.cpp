@@ -23,8 +23,8 @@ protected:
     }
 
     virtual void SetUp() {
-
-
+        
+        node = rclcpp::Node::make_shared("testEEInterface");
 
         ROSEE::Parser p ( node );
         p.init ( ROSEE::Utils::getPackagePath() + "/configs/urdf/test_ee.urdf",
@@ -144,7 +144,7 @@ int main ( int argc, char **argv ) {
         std::cout << "[TEST ERROR] Prepare Funcion failed" << std::endl;
         return -1;
     }
-
+    
     ::testing::InitGoogleTest ( &argc, argv );
     return RUN_ALL_TESTS();
 }
