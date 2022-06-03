@@ -22,7 +22,6 @@
         <chain base_link="base_link" tip_link="SFP1_2_tip" />
     </group>
     
-<!-- For Xbot2 -->   
     <group name="virtual1">
         <chain base_link="base_link" tip_link="motor_finger1_virtual_link" />
     </group>
@@ -46,8 +45,6 @@
       <group name="virtual3" />
       <group name="virtualThumb" />
    </group>
-    <!-- For Xbot2 END -->
-
 
     <group name="end_effector_fingers">
       <group name="finger_1" />
