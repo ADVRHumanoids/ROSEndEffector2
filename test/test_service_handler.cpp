@@ -43,11 +43,9 @@ protected:
 
         std::string robot_name = argv[1];
         
-        std::string handNameArg = "hand_name:=" + robot_name;
-
         setenv("HAND_NAME",robot_name.c_str(),1);
 
-        roseeExecutor.reset(new ROSEE::TestUtils::Process({"ros2", "launch", "end_effector", "test_rosee_startup_launch.xml", handNameArg}));
+        roseeExecutor.reset(new ROSEE::TestUtils::Process({"ros2", "launch", "end_effector", "rosee_startup_launch.py"}));
 
     }
 

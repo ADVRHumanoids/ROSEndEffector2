@@ -149,8 +149,9 @@ protected:
 
 void testSendAction::setMainNode() {
     
-    std::string handNameArg = "hand_name:=" + ee->getName();
-    roseeExecutor.reset(new ROSEE::TestUtils::Process({"roslaunch", "end_effector", "test_rosee_startup.launch", handNameArg}));
+    setenv("HAND_NAME",ee->getName().c_str(),1);
+
+    roseeExecutor.reset(new ROSEE::TestUtils::Process({"ros2", "launch", "end_effector", "rosee_startup_launch.py"}));
 
     //TODO put a checkReady service instead of sleeping?
     sleep(5); // lets wait for test_rosee_startup to be ready
