@@ -19,7 +19,7 @@ def generate_launch_description():
     hal_lib = LaunchConfiguration('hal_lib')
     hal_lib_launch_arg = DeclareLaunchArgument('hal_lib', default_value='ROSEE::DummyHalPlugin')
     matlogger_path = LaunchConfiguration('matlogger_path')
-    matlogger_path_launch_arg = DeclareLaunchArgument('matlogger_path', default_value=[os.getenv('HOME'), '/ROSEE2/matlog/', hand_name, '/'])
+    matlogger_path_launch_arg = DeclareLaunchArgument('matlogger_path', default_value=[os.getenv('HOME'), '/.ROSEE2/matlog/', hand_name, '/'])
     
     return LaunchDescription([
         

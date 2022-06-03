@@ -11,6 +11,8 @@
 
 #include <rosee_msg/srv/new_generic_grasping_action_srv.hpp>
 
+#include <chrono>
+using namespace std::literals::chrono_literals;
 
 
 namespace {
@@ -36,6 +38,7 @@ protected:
     }
 
     virtual void SetUp(int argc, char **argv) {
+        
     
         node = ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testServiceHandler");
 
@@ -45,8 +48,8 @@ protected:
         
         setenv("HAND_NAME",robot_name.c_str(),1);
 
-        roseeExecutor.reset(new ROSEE::TestUtils::Process({"ros2", "launch", "end_effector", "rosee_startup_launch.py"}));
-
+        roseeExecutor.reset(new ROSEE::TestUtils::Process({"ros2", "launch", "end_effector", "test_rosee_startup_launch.py"}));
+        
     }
 
     virtual void TearDown() override {
@@ -61,7 +64,12 @@ protected:
 
         rosee_client = node->create_client<clientType>(serviceName);
 
-        rosee_client->wait_for_service();
+        RCLCPP_INFO(node->get_logger(), "Waiting for '%s' service for max 5 seconds...", serviceName.c_str());
+        if (!rosee_client->wait_for_service(5s)) {
+            RCLCPP_INFO(node->get_logger(), "Service'%s' not ready after seconds", serviceName.c_str());
+            return false;
+        }
+        RCLCPP_INFO(node->get_logger(), "Service '%s' ready", serviceName.c_str());
 
         return true;
 
@@ -78,15 +86,19 @@ TEST_F ( testServiceHandler, callNewAction ) {
     SetUp(argc_g, argv_g);
     
     sleep(1); //without this joint state publisher crashes I do not know why (it is useless in this test, but annoying prints on traceback would appear)
-    
+
     rclcpp::Client<rosee_msg::srv::NewGenericGraspingActionSrv>::SharedPtr rosee_client; 
-    initClient<rosee_msg::srv::NewGenericGraspingActionSrv>(rosee_client, "/ros_end_effector/new_generic_grasping_action");
+    ASSERT_TRUE(initClient<rosee_msg::srv::NewGenericGraspingActionSrv>(rosee_client, "/new_generic_grasping_action"));
 
     auto newActionSrv = std::make_shared<rosee_msg::srv::NewGenericGraspingActionSrv::Request>();
 
     //empty request, error
+                std::cout << "BBBBBBBBBBBBBBBBBBBBBBBBBBBBB" << std::endl;
+
     auto result = rosee_client->async_send_request(newActionSrv);
-    EXPECT_EQ( rclcpp::spin_until_future_complete(node, result), rclcpp::FutureReturnCode::SUCCESS);
+            std::cout << "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" << std::endl;
+    std::cout << rclcpp::spin_until_future_complete(node, result) << std::endl;
+    //EXPECT_EQ( rclcpp::spin_until_future_complete(node, result), rclcpp::FutureReturnCode::SUCCESS);
     EXPECT_FALSE( result.get()->accepted );
     EXPECT_FALSE( result.get()->emitted );
     EXPECT_TRUE( result.get()->error_msg.size() > 0 );
@@ -150,8 +162,8 @@ TEST_F ( testServiceHandler, callNewActionAndRetrieve ) {
     rclcpp::Client<rosee_msg::srv::NewGenericGraspingActionSrv>::SharedPtr rosee_client_new_action; 
     rclcpp::Client<rosee_msg::srv::GraspingActionsAvailable>::SharedPtr rosee_client_actions_available; 
 
-    initClient<rosee_msg::srv::NewGenericGraspingActionSrv>(rosee_client_new_action, "/ros_end_effector/new_generic_grasping_action");
-    initClient<rosee_msg::srv::GraspingActionsAvailable>(rosee_client_actions_available, "/ros_end_effector/grasping_actions_available");
+    initClient<rosee_msg::srv::NewGenericGraspingActionSrv>(rosee_client_new_action, "/new_generic_grasping_action");
+    initClient<rosee_msg::srv::GraspingActionsAvailable>(rosee_client_actions_available, "/grasping_actions_available");
 
     auto newActionSrv = std::make_shared<rosee_msg::srv::NewGenericGraspingActionSrv::Request>();
     

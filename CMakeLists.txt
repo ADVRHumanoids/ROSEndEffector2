@@ -27,7 +27,7 @@ find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rosee_msg REQUIRED)
 find_package(Boost REQUIRED filesystem system)
 find_package(pluginlib REQUIRED)
-                                                                               
+                                                                                                                                                  
 find_package(Eigen3 REQUIRED)
 #find_package(muparser REQUIRED) 
 find_library(_MUPARSER_LIB muparser REQUIRED)
@@ -330,6 +330,7 @@ if(BUILD_TESTING)
     ament_target_dependencies(EEInterface_test
 		rclcpp
 		sensor_msgs
+		ament_index_cpp
 	)
     target_link_libraries(EEInterface_test
                                            ROSEEParser
@@ -378,6 +379,7 @@ if(BUILD_TESTING)
 		rclcpp
 		rosee_msg
 		rclcpp_action
+		ament_index_cpp
 	)
     target_link_libraries(SendAction_test
                                               ROSEEActions

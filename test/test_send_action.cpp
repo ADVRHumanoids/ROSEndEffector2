@@ -54,8 +54,8 @@ protected:
         std::string robot_name = argv[1];
         
         ROSEE::Parser p ( node );
-        if (! p.init ( ROSEE::Utils::getPackagePath() + "/configs/urdf/" + robot_name + ".urdf",
-                       ROSEE::Utils::getPackagePath() + "/configs/srdf/" + robot_name + ".srdf",
+        if (! p.init ( ament_index_cpp::get_package_share_directory("end_effector") + "/configs/urdf/" + robot_name + ".urdf",
+                       ament_index_cpp::get_package_share_directory("end_effector") + "/configs/srdf/" + robot_name + ".srdf",
                        std::string(std::getenv("HOME")) + "/ROSEE2/actions/tests/"+robot_name+ "/") ) 
         {
             
@@ -151,7 +151,7 @@ void testSendAction::setMainNode() {
     
     setenv("HAND_NAME",ee->getName().c_str(),1);
 
-    roseeExecutor.reset(new ROSEE::TestUtils::Process({"ros2", "launch", "end_effector", "rosee_startup_launch.py"}));
+    roseeExecutor.reset(new ROSEE::TestUtils::Process({"ros2", "launch", "end_effector", "test_rosee_startup_launch.py"}));
 
     //TODO put a checkReady service instead of sleeping?
     sleep(5); // lets wait for test_rosee_startup to be ready

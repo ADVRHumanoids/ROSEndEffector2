@@ -82,14 +82,6 @@ static inline int binomial_coefficent(int n, int k) {
     return Utils::binomial_coefficent(n - 1, k - 1) + Utils::binomial_coefficent(n - 1, k);
     
 }
-    
-    
-static std::string getPackagePath() {
-    
-    boost::filesystem::path path(__FILE__);
-    path.remove_filename();
-    return path.string() + "/../../";
-}
 
 template <class KeyType, class ValueType>
 static std::vector<KeyType> extract_keys(std::map<KeyType, ValueType> const& input_map) {

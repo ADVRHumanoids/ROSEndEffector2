@@ -5,7 +5,7 @@ from launch.actions import DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 import launch_ros
 import os
-from ament_index_python.packages import get_package_share_directory
+from ament_index_python.packages import get_package_share_directory, get_package_prefix
 
 
 
@@ -25,6 +25,13 @@ def generate_launch_description():
         print(f'Please provide hand name as environment variable: "export HAND_NAME=hand_name"')
         return 
     
+    #Necessary because lib are in subfolder which is not found
+    ld_library_path = os.getenv('LD_LIBRARY_PATH')
+    ld_library_path += ':'
+    ld_library_path += get_package_prefix('end_effector')
+    ld_library_path += '/lib/end_effector'
+    os.environ['LD_LIBRARY_PATH'] = str(ld_library_path)
+    
     hand_name_urdf = hand_name + ".urdf"
     hand_name_srdf = hand_name + ".srdf"
     
@@ -33,10 +40,14 @@ def generate_launch_description():
     
     gdb = LaunchConfiguration('gdb')
     gdb_launch_arg = DeclareLaunchArgument('gdb', default_value='False')
+    gazebo = LaunchConfiguration('gazebo')
+    gazebo_launch_arg = DeclareLaunchArgument('gazebo', default_value='False')
     hal_lib = LaunchConfiguration('hal_lib')
     hal_lib_launch_arg = DeclareLaunchArgument('hal_lib', default_value='ROSEE::DummyHalPlugin')
     actions_folder_path = LaunchConfiguration('actions_folder_path')
-    actions_folder_path_launch_arg = DeclareLaunchArgument('actions_folder_path', default_value=[os.getenv('HOME'), '/ROSEE2/actions/', hand_name, '/'])
+    actions_folder_path_launch_arg = DeclareLaunchArgument('actions_folder_path', default_value=[os.getenv('HOME'), '/.ROSEE2/actions/', hand_name, '/'])
+    matlogger_path = LaunchConfiguration('matlogger_path')
+    matlogger_path_launch_arg = DeclareLaunchArgument('matlogger_path', default_value=[os.getenv('HOME'), '/.ROSEE2/matlogs/', hand_name, '/'])
     
     urdf_path = os.path.join(
         get_package_share_directory('end_effector'),
@@ -60,8 +71,10 @@ def generate_launch_description():
         
         #hand_name_launch_arg,
         gdb_launch_arg,
+        gazebo_launch_arg,
         hal_lib_launch_arg,
         actions_folder_path_launch_arg,
+        matlogger_path_launch_arg,
         
         launch_ros.actions.Node(
             package='end_effector',
@@ -76,9 +89,9 @@ def generate_launch_description():
                 {'actions_folder_path': actions_folder_path},
                 {'primitive_aggregated_srv_name': "primitives_aggregated_available"},
                 {'selectable_finger_pair_info': "selectable_finger_pair_info"},
-                {'grasping_action_srv_name': "grasping_action_srv_name"},
+                {'grasping_action_srv_name': "grasping_actions_available"},
                 {'hand_info': "hand_info"},
-                {'new_grasping_action_srv_name': "new_grasping_action_srv_name"},
+                {'new_grasping_action_srv_name': "new_generic_grasping_action"},
                 {'rosAction_grasping_command': "action_command"},
                 {'rate': 100.0},
             ],
@@ -93,7 +106,7 @@ def generate_launch_description():
                 ])
             ]),
             launch_arguments={
-                'gazebo': False,
+                'gazebo': gazebo,
                 'hand_name': hand_name,
                 'hal_lib': hal_lib,
                 'gdb': gdb,
@@ -103,19 +116,19 @@ def generate_launch_description():
         
         
         ############     <!-- NOT NEEDED FOR TESTS; BUT uncomment to debug the test itself on local machine -->
-        #launch_ros.actions.Node(
-            #package='robot_state_publisher',
-            #executable='robot_state_publisher',
-            #name='robot_state_publisher',
-            #output='screen',
-            #parameters=[
-                #{'robot_description': robot_description},
-                #{'publish_frequency': 100.0}
-            #],
-            #remappings=[
-                #("joint_states", "/dummyHal/joint_states")
-            #]
-        #),
+        launch_ros.actions.Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='screen',
+            parameters=[
+                {'robot_description': robot_description},
+                {'publish_frequency': 100.0}
+            ],
+            remappings=[
+                ("joint_states", "/dummyHal/joint_states")
+            ]
+        ),
             
         #launch_ros.actions.Node(
             #package='rviz2',

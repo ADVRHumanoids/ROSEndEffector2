@@ -78,10 +78,10 @@ int main ( int argc, char **argv ) {
         auto& clk = *node->get_clock();
         if (eeHalPtr->checkCommandPub()) {
             eeHalPtr->move();
-            RCLCPP_WARN_STREAM_ONCE (node->get_logger(), "[EEHalExecutor] someone is publishing on '/ros_end_effector/motor_reference_pos', I will call the move()" );   
+            RCLCPP_INFO_STREAM_ONCE (node->get_logger(), "[EEHalExecutor] someone is publishing on '/ros_end_effector/motor_reference_pos', I will call the move()" );   
             
         } else {
-            RCLCPP_WARN_STREAM_THROTTLE (node->get_logger(), clk, 60, "[EEHalExecutor] no-one is publishing on '/ros_end_effector/motor_reference_pos', I will not call the move()" );   
+            RCLCPP_WARN_STREAM_THROTTLE (node->get_logger(), clk, 5000, "[EEHalExecutor] no-one is publishing on '/ros_end_effector/motor_reference_pos', I will not call the move()" );   
         }
         
         //send _js_msg to external (ie to ROSEE main node)

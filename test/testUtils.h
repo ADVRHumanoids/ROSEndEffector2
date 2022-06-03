@@ -10,6 +10,9 @@
 #include <rclcpp/rclcpp.hpp>
 #include <end_effector/Utils.h>
 
+#include <ament_index_cpp/get_package_share_directory.hpp>
+#include <ament_index_cpp/get_package_prefix.hpp>
+
 
 /** Utils funcion to create process to run roscore,
  * gently copied from https://github.com/ADVRHumanoids/CartesianInterface/blob/refactor2020/tests/testutils.h
@@ -58,6 +61,10 @@ Process::Process(std::vector<std::string>  args):
 
     if(_pid == 0)
     {
+        std::vector<std::string> source_args{ament_index_cpp::get_package_prefix("end_effector") + "/../setup.bash"};
+        char** source_args_char = (char**)source_args.data();
+        
+        ::execvp("source", source_args_char);
         ::execvp(argv[0], argv);
         perror("execvp");
         throw std::runtime_error("Unknown command");
@@ -97,8 +104,8 @@ rclcpp::Node::SharedPtr prepareROSForTests ( int argc, char **argv, std::string 
     auto node = rclcpp::Node::make_shared(testName);
     
     //fill ros param with file models, needed by moveit parserMoveIt
-    std::string modelPathURDF = ROSEE::Utils::getPackagePath() + "configs/urdf/" + argv[1];
-    std::string modelPathSRDF = ROSEE::Utils::getPackagePath() + "configs/srdf/" + argv[1];
+    std::string modelPathURDF = ament_index_cpp::get_package_share_directory("end_effector") + "/configs/urdf/" + argv[1];
+    std::string modelPathSRDF = ament_index_cpp::get_package_share_directory("end_effector") + "/configs/srdf/" + argv[1];
 
     //Is there a better way to parse?
     std::ifstream urdf(modelPathURDF + ".urdf");

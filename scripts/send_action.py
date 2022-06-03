@@ -22,7 +22,7 @@ class RoseeSendGoal(Node):
         goal_msg.goal_action.action_type = 0
         goal_msg.goal_action.action_primitive_type = 0
         goal_msg.goal_action.selectable_items = ['finger_1']
-        goal_msg.goal_action.percentage = 0.1
+        goal_msg.goal_action.percentage = 0.8
         goal_msg.goal_action.error_norm = 0.0
         
         self._action_client.wait_for_server()

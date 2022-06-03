@@ -33,8 +33,8 @@ protected:
         ASSERT_NE(node, nullptr);
 
         ROSEE::Parser p ( node );
-        p.init ( ROSEE::Utils::getPackagePath() + "/configs/urdf/test_ee.urdf",
-                 ROSEE::Utils::getPackagePath() + "/configs/srdf/test_ee.srdf",
+        p.init ( ament_index_cpp::get_package_share_directory("end_effector") + "/configs/urdf/test_ee.urdf",
+                 ament_index_cpp::get_package_share_directory("end_effector") + "/configs/srdf/test_ee.srdf",
                  "ROSEE/actions/test_ee"
         );
         p.printEndEffectorFingerJointsMap();
