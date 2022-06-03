@@ -22,10 +22,16 @@ protected:
 
     virtual ~testTimedAction() {
     }
-
+    
     virtual void SetUp() override {
         
-        node = rclcpp::Node::make_shared("testTimedAction");        
+    }
+
+    virtual void SetUp(int argc, char **argv) {
+    
+        node = ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testTimedAction");
+        
+        ASSERT_NE(node, nullptr);
         
         std::shared_ptr <ROSEE::ParserMoveIt> parserMoveIt = std::make_shared <ROSEE::ParserMoveIt> (node);
 
@@ -103,6 +109,8 @@ protected:
 
 TEST_F ( testTimedAction, checkMembersSizeConsistency ) {
     
+    SetUp(argc_g, argv_g);
+    
     EXPECT_EQ ( timedAction.getInnerActionsNames().size(), timedAction.getAllActionMargins().size() );
     EXPECT_EQ ( timedAction.getAllActionMargins().size(), timedAction.getAllJointCountAction().size() );
     EXPECT_EQ ( timedAction.getAllJointCountAction().size(), timedAction.getAllJointPos().size() );
@@ -114,6 +122,8 @@ TEST_F ( testTimedAction, checkMembersSizeConsistency ) {
 }
 
 TEST_F ( testTimedAction, checkEmitParse ) {
+    
+    SetUp(argc_g, argv_g);
     
     if (timedAction.getInnerActionsNames().size() > 0) {
         
@@ -174,7 +184,6 @@ TEST_F ( testTimedAction, checkEmitParse ) {
                 
             }
         }
-
     }
 }
 
@@ -188,14 +197,10 @@ int main ( int argc, char **argv ) {
         return -1;
     }
     
-    
-    if ( ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testTimedAction" ) != 0 ) {
-        
-        std::cout << "[TEST ERROR] Prepare Function failed" << std::endl;
-        return -1;
-    }
-    
+    rclcpp::init ( argc, argv );
     
     ::testing::InitGoogleTest ( &argc, argv );
+    ::testing::AddGlobalTestEnvironment(new MyTestEnvironment(argc, argv));
+
     return RUN_ALL_TESTS();
 }

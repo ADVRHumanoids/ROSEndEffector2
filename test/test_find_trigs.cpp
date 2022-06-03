@@ -21,10 +21,16 @@ protected:
 
     virtual ~testFindTrigs() {
     }
-
+    
     virtual void SetUp() override {
+        
+    }
 
-        node = rclcpp::Node::make_shared("testFindTrigs");
+    virtual void SetUp(int argc, char **argv) {
+    
+        node = ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testFindTrigs");
+        
+        ASSERT_NE(node, nullptr);
         
         std::shared_ptr <ROSEE::ParserMoveIt> parserMoveIt = std::make_shared <ROSEE::ParserMoveIt> (node);
         //if return false, models are not found and it is useless to continue the test
@@ -70,6 +76,8 @@ protected:
 
 TEST_F ( testFindTrigs, checkNumberLinks ) {
     
+    SetUp(argc_g, argv_g);
+    
     for (int k = 0; k< trigMap.size(); ++k) {
         for (auto &mapEl: trigMap.at(k) ) {
             
@@ -88,6 +96,8 @@ TEST_F ( testFindTrigs, checkNumberLinks ) {
 }
 
 TEST_F ( testFindTrigs, checkSizeStatesInfoSet ) {
+    
+    SetUp(argc_g, argv_g);
     
     for (int k = 0; k< trigMap.size(); ++k) {
 
@@ -112,6 +122,8 @@ TEST_F ( testFindTrigs, checkSizeStatesInfoSet ) {
 }
 
 TEST_F ( testFindTrigs, checkNameTypeConsistency ) {
+    
+    SetUp(argc_g, argv_g);
     
     for (int k = 0; k < trigMap.size(); ++k) {
         
@@ -161,6 +173,8 @@ TEST_F ( testFindTrigs, checkNameTypeConsistency ) {
 // to check if the found map is the same map that is emitted in the file and then parsed
 TEST_F ( testFindTrigs, checkEmitParse ) {
     
+    SetUp(argc_g, argv_g);
+    
     for (int k = 0; k< trigMap.size(); ++k) {
     
         ASSERT_EQ (trigMap.at(k).size(), trigParsedMap.at(k).size() );
@@ -209,6 +223,8 @@ TEST_F ( testFindTrigs, checkEmitParse ) {
  * @WARNING what happens if the define in findAction.h DEFAULT_JOINT_POS 0.0 changes
  */
 TEST_F ( testFindTrigs, checkJointPosTipAndFing ) {
+    
+    SetUp(argc_g, argv_g);
     
     if (trigMap.size() != 0 &&
         trigMap.at(0).size() != 0 && 
@@ -260,6 +276,7 @@ TEST_F ( testFindTrigs, checkJointPosTipAndFing ) {
  */
 TEST_F ( testFindTrigs, checkJointPosFlexsAndTrig ) {
     
+    SetUp(argc_g, argv_g);
 
     if (trigMap.size() != 0 &&
         trigMap.at(0).size() != 0 && 
@@ -326,6 +343,8 @@ TEST_F ( testFindTrigs, checkJointPosFlexsAndTrig ) {
  */
 TEST_F ( testFindTrigs, checkFlexsSingleJoint ) {
     
+    SetUp(argc_g, argv_g);
+    
     for (int k = 0; k< trigMap.size(); ++k) {
         
         if ( trigMap.at(k).begin()->second.getPrimitiveType() == ROSEE::ActionPrimitive::Type::Trig ) {
@@ -367,13 +386,10 @@ int main ( int argc, char **argv ) {
         return -1;
     }
     
+    rclcpp::init ( argc, argv );
     
-    if ( ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testFindTrigs" ) != 0 ) {
-        
-        std::cout << "[TEST ERROR] Prepare Funcion failed" << std::endl;
-        return -1;
-    }
-        
     ::testing::InitGoogleTest ( &argc, argv );
+    ::testing::AddGlobalTestEnvironment(new MyTestEnvironment(argc, argv));
+
     return RUN_ALL_TESTS();
 }

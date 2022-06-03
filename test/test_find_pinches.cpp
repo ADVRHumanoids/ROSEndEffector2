@@ -14,7 +14,6 @@ namespace {
 
 class testFindPinches: public ::testing::Test {
 
-
 protected:
 
     testFindPinches() {
@@ -24,14 +23,22 @@ protected:
     }
 
     virtual void SetUp() override {
-    
-        node = rclcpp::Node::make_shared("testFindPinches");
         
+    }
+    
+    virtual void SetUp(int argc, char **argv) {
+    
+        node = ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testFindPinches");
+        
+        ASSERT_NE(node, nullptr);
+
         std::shared_ptr <ROSEE::ParserMoveIt> parserMoveIt = std::make_shared <ROSEE::ParserMoveIt> (node);
+
         //if return false, models are not found and it is useless to continue the test
         ASSERT_TRUE(parserMoveIt->init ("robot_description", false)) ;
+
         ROSEE::FindActions actionsFinder (parserMoveIt);
-        
+
         std::string folderForActions = "ROSEE/actions/" + parserMoveIt->getHandName();
 
         auto theTwoMaps = actionsFinder.findPinch(folderForActions + "/primitives/");
@@ -67,6 +74,8 @@ protected:
 
 TEST_F ( testFindPinches, checkNumberLinks ) {
     
+    SetUp(argc_g, argv_g);
+    
     for (auto &mapEl: pinchMap ) {
         
         //being a pair the .first has always dimension 2
@@ -84,6 +93,8 @@ TEST_F ( testFindPinches, checkNumberLinks ) {
 
 TEST_F ( testFindPinches, checkSizeStatesInfoSet ) {
     
+    SetUp(argc_g, argv_g);
+
     for (auto &mapEl: pinchMap ) {
         
         //get the member which is set in costructor
@@ -105,6 +116,8 @@ TEST_F ( testFindPinches, checkSizeStatesInfoSet ) {
 
 TEST_F ( testFindPinches, checkName ) {
     
+    SetUp(argc_g, argv_g);
+    
     for (auto &mapEl: pinchMap ) {
         
         EXPECT_TRUE (mapEl.second.getName().compare("pinchTight") == 0);
@@ -120,6 +133,8 @@ TEST_F ( testFindPinches, checkName ) {
 
 //this is an important test: check if the order of statesInfo in right according to depth
 TEST_F ( testFindPinches, checkOrderStatesInfoSet ) {
+    
+    SetUp(argc_g, argv_g);
     
     for (auto &mapEl: pinchMap ) { 
         
@@ -155,6 +170,8 @@ TEST_F ( testFindPinches, checkOrderStatesInfoSet ) {
 
 // to check if the found map is the same map that is emitted in the file and then parsed
 TEST_F ( testFindPinches, checkEmitParse ) {
+    
+    SetUp(argc_g, argv_g);
     
     ASSERT_EQ (pinchMap.size(), pinchParsedMap.size() );
     
@@ -238,6 +255,8 @@ TEST_F ( testFindPinches, checkEmitParse ) {
 ////*********************************   LOOSE PINCH TESTS *********************************************************
 TEST_F ( testFindPinches, checkNumberLinksLoose ) {
     
+    SetUp(argc_g, argv_g);
+    
     for (auto &mapEl: pinchLooseMap ) {
         
         //being a pair the .first has always dimension 2
@@ -254,6 +273,8 @@ TEST_F ( testFindPinches, checkNumberLinksLoose ) {
 }
 
 TEST_F ( testFindPinches, checkSizeStatesInfoSetLoose ) {
+    
+    SetUp(argc_g, argv_g);
     
     for (auto &mapEl: pinchLooseMap ) {
         
@@ -276,6 +297,8 @@ TEST_F ( testFindPinches, checkSizeStatesInfoSetLoose ) {
 
 TEST_F ( testFindPinches, checkNameLoose ) {
     
+    SetUp(argc_g, argv_g);
+    
     for (auto &mapEl: pinchLooseMap ) {
         
         EXPECT_TRUE (mapEl.second.getName().compare("pinchLoose") == 0);
@@ -291,6 +314,8 @@ TEST_F ( testFindPinches, checkNameLoose ) {
 
 //this is an important test: check if the order of statesInfo in right according to distance
 TEST_F ( testFindPinches, checkOrderStatesInfoSetLoose ) {
+    
+    SetUp(argc_g, argv_g);
     
     for (auto &mapEl: pinchLooseMap ) { 
         
@@ -324,6 +349,8 @@ TEST_F ( testFindPinches, checkOrderStatesInfoSetLoose ) {
 
 // to check if the found map is the same map that is emitted in the file and then parsed
 TEST_F ( testFindPinches, checkEmitParseLoose ) {
+    
+    SetUp(argc_g, argv_g);
     
     ASSERT_EQ (pinchLooseMap.size(), pinchLooseParsedMap.size() );
     
@@ -375,6 +402,8 @@ TEST_F ( testFindPinches, checkEmitParseLoose ) {
 //we check only the not parsed maps, other tests are done for correctness of parsing (checkEmitParse)
 TEST_F ( testFindPinches, checkTightLooseExclusion ) {
     
+    SetUp(argc_g, argv_g);
+    
     for (auto mapEl : pinchMap ) {
         EXPECT_EQ (0, pinchLooseMap.count(mapEl.first)) << mapEl.first.first << ", " << mapEl.first.second 
             << "  " << " is also present in Loose Pinches" << std::endl;
@@ -399,12 +428,10 @@ int main ( int argc, char **argv ) {
         return -1;
     }
     
-    if ( ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testFindPinches" ) != 0 ) {
-        
-        std::cout << "[TEST ERROR] Prepare Funcion failed" << std::endl;
-        return -1;
-    }
+    rclcpp::init ( argc, argv );
     
     ::testing::InitGoogleTest ( &argc, argv );
+    ::testing::AddGlobalTestEnvironment(new MyTestEnvironment(argc, argv));
+
     return RUN_ALL_TESTS();
 }

@@ -22,10 +22,12 @@ protected:
     virtual ~testComposedAction() {
     }
 
-    virtual void SetUp() override {
+    virtual void SetUp(int argc, char **argv) {
+    
+        node = ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testComposedAction");
         
-        node = rclcpp::Node::make_shared("testComposedAction");
-        
+        ASSERT_NE(node, nullptr);
+                
         std::shared_ptr <ROSEE::ParserMoveIt> parserMoveIt = std::make_shared <ROSEE::ParserMoveIt> (node);
 
         //if return false, models are not found and it is useless to continue the test
@@ -67,6 +69,8 @@ protected:
 
 TEST_F ( testComposedAction, checkNumberPrimitives ) {
     
+    SetUp(argc_g, argv_g);
+    
     EXPECT_EQ ( grasp.numberOfInnerActions(), grasp.getInnerActionsNames().size() );
     
     EXPECT_EQ ( graspParsed.numberOfInnerActions(), graspParsed.getInnerActionsNames().size() );    
@@ -74,6 +78,8 @@ TEST_F ( testComposedAction, checkNumberPrimitives ) {
 }
 
 TEST_F ( testComposedAction, checkEmitParse ) {
+    
+    SetUp(argc_g, argv_g);
     
     if (trigMap.size() > 0) { //if empty, no grasp is defined in the setup so test without meaning
         
@@ -103,6 +109,9 @@ TEST_F ( testComposedAction, checkEmitParse ) {
 
 // if independent, at maximum only one primitive can influence each joint
 TEST_F ( testComposedAction, checkIndependence ) { 
+    
+    SetUp(argc_g, argv_g);
+    
     if (grasp.isIndependent()) {
         for (auto it : grasp.getJointsInvolvedCount() ) {
             EXPECT_LE ( it.second, 1 );
@@ -120,12 +129,10 @@ int main ( int argc, char **argv ) {
         return -1;
     }
     
-    if ( ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testComposedAction" ) != 0 ) {
-        
-        std::cout << "[TEST ERROR] Prepare Funcion failed" << std::endl;
-        return -1;
-    }
+    rclcpp::init ( argc, argv );
     
     ::testing::InitGoogleTest ( &argc, argv );
+    ::testing::AddGlobalTestEnvironment(new MyTestEnvironment(argc, argv));
+
     return RUN_ALL_TESTS();
 }

@@ -40,18 +40,18 @@ protected:
 
     virtual ~testSendAction() {
     }
-
+    
     virtual void SetUp() override {
         
-        node = rclcpp::Node::make_shared("testSendAction");        
+    }
+
+    virtual void SetUp(int argc, char **argv) {
+    
+        node = ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testSendAction");
         
-        std::string robot_name = "";
-        node->declare_parameter("robot_name","");
-        node->get_parameter("robot_name", robot_name);
-        if (robot_name.size() == 0) {
-            std::cout << "[TEST FAIL: robot name not set on server]" << std::endl;
-            return;
-        }
+        ASSERT_NE(node, nullptr);
+                
+        std::string robot_name = argv[1];
         
         ROSEE::Parser p ( node );
         if (! p.init ( ROSEE::Utils::getPackagePath() + "/configs/urdf/" + robot_name + ".urdf",
@@ -264,6 +264,7 @@ void testSendAction::sendAndTest(ROSEE::Action::Ptr action, double percentageWan
 
 TEST_F ( testSendAction, sendSimpleGeneric ) {
     
+    SetUp(argc_g, argv_g);
     
     ROSEE::JointPos jp;
     ROSEE::JointsInvolvedCount jpc;
@@ -296,6 +297,7 @@ TEST_F ( testSendAction, sendSimpleGeneric ) {
 
 TEST_F ( testSendAction, sendSimpleGeneric2 ) {
     
+    SetUp(argc_g, argv_g);
     
     ROSEE::JointPos jp;
     ROSEE::JointsInvolvedCount jpc;
@@ -327,6 +329,8 @@ TEST_F ( testSendAction, sendSimpleGeneric2 ) {
 
 
 TEST_F ( testSendAction, sendSimpleGeneric3 ) {
+    
+    SetUp(argc_g, argv_g);
     
     ROSEE::JointPos jp;
     ROSEE::JointsInvolvedCount jpc;
@@ -364,6 +368,8 @@ TEST_F ( testSendAction, sendSimpleGeneric3 ) {
  */
 TEST_F ( testSendAction, sendTrig ) {
 
+    SetUp(argc_g, argv_g);
+    
     ROSEE::ActionTrig::Map trigMap = actionsFinder->findTrig (ROSEE::ActionPrimitive::Type::Trig, folderForActions + "/primitives/") ;
 
     if (trigMap.size()>0){
@@ -396,6 +402,8 @@ TEST_F ( testSendAction, sendTrig ) {
 }
 
 TEST_F ( testSendAction, sendTipFlex ) {
+    
+    SetUp(argc_g, argv_g);
     
     auto tipFlexMap = actionsFinder->findTrig (ROSEE::ActionPrimitive::Type::TipFlex, folderForActions + "/primitives/");
 
@@ -437,6 +445,8 @@ TEST_F ( testSendAction, sendTipFlex ) {
 
 TEST_F ( testSendAction, sendFingFlex ) {
 
+    SetUp(argc_g, argv_g);
+    
     auto fingFlexMap = actionsFinder->findTrig (ROSEE::ActionPrimitive::Type::FingFlex, folderForActions + "/primitives/");
 
     if (fingFlexMap.size()>0) {
@@ -478,6 +488,8 @@ TEST_F ( testSendAction, sendFingFlex ) {
 
 TEST_F ( testSendAction, sendPinches ) {
     
+    SetUp(argc_g, argv_g);
+    
     auto pinchTightMap = actionsFinder->findPinch(folderForActions + "/primitives/").first;
 
     if (pinchTightMap.size()>0){
@@ -493,6 +505,8 @@ TEST_F ( testSendAction, sendPinches ) {
 }
 
 TEST_F ( testSendAction, sendPinchLoose ) {
+    
+    SetUp(argc_g, argv_g);
     
     auto pinchLooseMap = actionsFinder->findPinch(folderForActions + "/primitives/").second;
 
@@ -510,7 +524,8 @@ TEST_F ( testSendAction, sendPinchLoose ) {
 
 TEST_F (testSendAction, sendMultiplePinchStrict ) {
     
-            
+    SetUp(argc_g, argv_g);
+           
     std::vector < ROSEE::ActionMultiplePinchTight::Map > multiplePinchMapsStrict;
     for (int i = 3; i <= ee->getFingersNumber(); i++) {
         auto multiplePinchMapStrict = actionsFinder->findMultiplePinch(i, folderForActions + "/primitives/", true );
@@ -540,7 +555,8 @@ TEST_F (testSendAction, sendMultiplePinchStrict ) {
 
 TEST_F (testSendAction, sendMultiplePinchNoStrict ) {
     
-            
+    SetUp(argc_g, argv_g);
+    
     std::vector < ROSEE::ActionMultiplePinchTight::Map > multiplePinchMapsNOStrict;
     for (int i = 3; i <= ee->getFingersNumber(); i++) {
         auto multiplePinchMapNOStrict = actionsFinder->findMultiplePinch(i, folderForActions + "/primitives/", false );
@@ -570,6 +586,8 @@ TEST_F (testSendAction, sendMultiplePinchNoStrict ) {
 }
 
 TEST_F (testSendAction, sendSingleJointMultipleTips ) {
+    
+    SetUp(argc_g, argv_g);
     
     std::vector < ROSEE::ActionSingleJointMultipleTips::Map > singleJointMultipleTipsMaps;
     
@@ -606,6 +624,8 @@ TEST_F (testSendAction, sendSingleJointMultipleTips ) {
  */
 TEST_F (testSendAction, sendComposedAction ) {
 
+    SetUp(argc_g, argv_g);
+    
     ROSEE::ActionTrig::Map trigMap = actionsFinder->findTrig (ROSEE::ActionPrimitive::Type::Trig, folderForActions + "/primitives/") ;
     auto fingFlexMap = actionsFinder->findTrig (ROSEE::ActionPrimitive::Type::FingFlex, folderForActions + "/primitives/");
     auto pinchTightMap = actionsFinder->findPinch(folderForActions + "/primitives/").first;
@@ -663,6 +683,8 @@ TEST_F (testSendAction, sendComposedAction ) {
 
 TEST_F (testSendAction, sendTimedAction ) {
 
+    SetUp(argc_g, argv_g);
+    
     ROSEE::ActionTrig::Map trigMap = actionsFinder->findTrig (ROSEE::ActionPrimitive::Type::Trig, folderForActions + "/primitives/") ;
     auto tipFlexMap = actionsFinder->findTrig (ROSEE::ActionPrimitive::Type::TipFlex, folderForActions + "/primitives/");
     auto pinchMaps = actionsFinder->findPinch(folderForActions + "/primitives/");
@@ -741,15 +763,10 @@ int main ( int argc, char **argv ) {
         return -1;
     }
     
-
-    /****************************************************************************************************/
-    
-    if ( ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testSendAction" ) != 0 ) {
-        
-        std::cout << "[TEST ERROR] Prepare Function failed" << std::endl;
-        return -1;
-    }
+    rclcpp::init ( argc, argv );
     
     ::testing::InitGoogleTest ( &argc, argv );
+    ::testing::AddGlobalTestEnvironment(new MyTestEnvironment(argc, argv));
+
     return RUN_ALL_TESTS();
 }

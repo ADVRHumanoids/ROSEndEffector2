@@ -21,10 +21,16 @@ protected:
 
     virtual ~testEEInterface() {
     }
-
-    virtual void SetUp() {
+    
+    virtual void SetUp() override {
         
-        node = rclcpp::Node::make_shared("testEEInterface");
+    }
+
+    virtual void SetUp(int argc, char **argv) {
+    
+        node = ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testEEInterface");
+        
+        ASSERT_NE(node, nullptr);
 
         ROSEE::Parser p ( node );
         p.init ( ROSEE::Utils::getPackagePath() + "/configs/urdf/test_ee.urdf",
@@ -46,6 +52,8 @@ protected:
 
 TEST_F ( testEEInterface, checkFingers ) {
 
+    SetUp(argc_g, argv_g);
+    
     std::vector<std::string> fingers;
     fingers = ee->getFingers();
 
@@ -66,6 +74,8 @@ TEST_F ( testEEInterface, checkFingers ) {
 
 TEST_F ( testEEInterface, checkActuatedJointsNum ) {
 
+    SetUp(argc_g, argv_g);
+    
     int joint_num = ee->getActuatedJointsNum();
     EXPECT_EQ ( 6, joint_num );
 
@@ -75,6 +85,8 @@ TEST_F ( testEEInterface, checkActuatedJointsNum ) {
 
 TEST_F ( testEEInterface, checkEEFingerJoints ) {
 
+    SetUp(argc_g, argv_g);
+    
     int joint_num_finger1 = ee->getActuatedJointsNumInFinger("finger_1");
 
     int joint_num = ee->getActuatedJointsNum();
@@ -96,6 +108,8 @@ TEST_F ( testEEInterface, checkEEFingerJoints ) {
 
 TEST_F ( testEEInterface, checkJointLimits) {
 
+    SetUp(argc_g, argv_g);
+    
     Eigen::VectorXd upperLimits = ee->getUpperPositionLimits();
     Eigen::VectorXd lowerLimits = ee->getLowerPositionLimits();
     
@@ -115,6 +129,8 @@ TEST_F ( testEEInterface, checkJointLimits) {
 
 TEST_F ( testEEInterface, checkIdJoints ) {
 
+    SetUp(argc_g, argv_g);
+    
     std::vector<std::string> actJoints = ee->getActuatedJoints();
    // ASSERT_FALSE (actJoints.empty());  //a hand can have no actuated joints?
     
@@ -132,19 +148,17 @@ TEST_F ( testEEInterface, checkIdJoints ) {
 } //namespace
 
 int main ( int argc, char **argv ) {
-
-    if (argc < 2 ) {
-
+    
+    if (argc < 2 ){
+        
         std::cout << "[TEST ERROR] Insert hand name as argument" << std::endl;
         return -1;
     }
-
-    if ( ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testEEInterface" ) != 0 ) {
-
-        std::cout << "[TEST ERROR] Prepare Funcion failed" << std::endl;
-        return -1;
-    }
+    
+    rclcpp::init ( argc, argv );
     
     ::testing::InitGoogleTest ( &argc, argv );
+    ::testing::AddGlobalTestEnvironment(new MyTestEnvironment(argc, argv));
+
     return RUN_ALL_TESTS();
 }

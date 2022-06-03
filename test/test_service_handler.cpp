@@ -30,22 +30,24 @@ protected:
 
     virtual ~testServiceHandler() {
     }
-
+    
     virtual void SetUp() override {
-
-        node = rclcpp::Node::make_shared("testServiceHandler");
         
-        std::string robot_name = "";
-        node->declare_parameter("robot_name","");
-        node->get_parameter("robot_name", robot_name);
-        if (robot_name.size() == 0) {
-            std::cout << "[TEST FAIL: robot name not set on server]" << std::endl;
-            return;
-        }
+    }
+
+    virtual void SetUp(int argc, char **argv) {
+    
+        node = ROSEE::TestUtils::prepareROSForTests ( argc, argv, "testServiceHandler");
+
+        ASSERT_NE(node, nullptr);
+
+        std::string robot_name = argv[1];
         
         std::string handNameArg = "hand_name:=" + robot_name;
+
         setenv("HAND_NAME",robot_name.c_str(),1);
-        roseeExecutor.reset(new ROSEE::TestUtils::Process({"roslaunch", "end_effector", "test_rosee_startup.launch", handNameArg}));
+
+        roseeExecutor.reset(new ROSEE::TestUtils::Process({"ros2", "launch", "end_effector", "test_rosee_startup_launch.xml", handNameArg}));
 
     }
 
@@ -75,6 +77,8 @@ protected:
  */
 TEST_F ( testServiceHandler, callNewAction ) {
 
+    SetUp(argc_g, argv_g);
+    
     sleep(1); //without this joint state publisher crashes I do not know why (it is useless in this test, but annoying prints on traceback would appear)
     
     rclcpp::Client<rosee_msg::srv::NewGenericGraspingActionSrv>::SharedPtr rosee_client; 
@@ -141,6 +145,8 @@ TEST_F ( testServiceHandler, callNewAction ) {
  */
 TEST_F ( testServiceHandler, callNewActionAndRetrieve ) {
     
+    SetUp(argc_g, argv_g);
+    
     sleep(1); //without this joint state publisher crashes I do not know why (it is useless in this test, but annoying prints on traceback would appear)
     
     rclcpp::Client<rosee_msg::srv::NewGenericGraspingActionSrv>::SharedPtr rosee_client_new_action; 
@@ -192,35 +198,25 @@ TEST_F ( testServiceHandler, callNewActionAndRetrieve ) {
         if (receivedAction.elements_involved.size() > 0){
             EXPECT_EQ(receivedAction.elements_involved.at(0), newActionSrv->new_action.elements_involved.at(0));
         }
-    }
-
-    
-     
-     
+    }  
 }
 
 
 
 } //namespace
 
-
-
 int main ( int argc, char **argv ) {
-
-    if (argc < 2 ) {
-
+    
+    if (argc < 2 ){
+        
         std::cout << "[TEST ERROR] Insert hand name as argument" << std::endl;
         return -1;
     }
-
-    /****************************************************************************************************/
-
-    rclcpp::init ( argc, argv);
-
-    auto nodeInit = rclcpp::Node::make_shared("testServiceHandlerInit");
-    nodeInit->declare_parameter("robot_name", "");
-    nodeInit->set_parameter(rclcpp::Parameter("robot_name", argv[1]));
-
+    
+    rclcpp::init ( argc, argv );
+    
     ::testing::InitGoogleTest ( &argc, argv );
+    ::testing::AddGlobalTestEnvironment(new MyTestEnvironment(argc, argv));
+
     return RUN_ALL_TESTS();
 }

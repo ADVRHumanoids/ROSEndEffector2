@@ -92,9 +92,8 @@ Process::~Process()
  * 
  * @return a not 0 if some error happens
  */
-int prepareROSForTests ( int argc, char **argv, std::string testName ) {
+rclcpp::Node::SharedPtr prepareROSForTests ( int argc, char **argv, std::string testName ) {
     
-    rclcpp::init ( argc, argv );
     auto node = rclcpp::Node::make_shared(testName);
     
     //fill ros param with file models, needed by moveit parserMoveIt
@@ -110,18 +109,36 @@ int prepareROSForTests ( int argc, char **argv, std::string testName ) {
 
     node->declare_parameter("robot_description", sUrdf.str()); 
     node->declare_parameter("robot_description_semantic", sSrdf.str()); 
-    node->declare_parameter("robot_name", argv[1]); 
+//     node->declare_parameter("robot_name", argv[1]); 
     
     node->set_parameter(rclcpp::Parameter("robot_description", sUrdf.str()));
     node->set_parameter(rclcpp::Parameter("robot_description_semantic", sSrdf.str()));
-    node->set_parameter(rclcpp::Parameter("robot_name", argv[1]));
+//     node->set_parameter(rclcpp::Parameter("robot_name", argv[1]));
 
-    return 0;
+    return node;
 }
 
 
 } //namespace TestUtils
 
 } //namespace ROSEE
+
+
+namespace {
+    
+int argc_g;    
+char** argv_g;
+
+class MyTestEnvironment : public testing::Environment {
+    
+public:
+    
+    explicit MyTestEnvironment(int argc, char **argv ) {
+        argc_g = argc;
+        argv_g = argv;
+    }
+};
+    
+}
 
 #endif // TESTUTILS_H
