@@ -43,8 +43,8 @@ static example_interfaces::msg::Float32MultiArray eigenMatrixToFloat32MultiArray
   
     rosMatrix.data.resize(size);
     int posRow = 0;
-    for (int iCol=0; iCol<nCol; iCol++){
-        for (int iRow=0; iRow<nRow; iRow++){
+    for (unsigned int iCol=0; iCol<nCol; iCol++){
+        for (unsigned int iRow=0; iRow<nRow; iRow++){
             posRow = iCol*nRow;
             rosMatrix.data.at(posRow + iRow) = eigenMatrix(iRow,iCol);
         }

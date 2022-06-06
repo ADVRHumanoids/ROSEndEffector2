@@ -453,31 +453,32 @@ bool ROSEE::RosServiceHandler::newGraspingActionCallback(
     ROSEE::JointsInvolvedCount jic;
     std::set<std::string> elementInvolved;
     
-    for (int i = 0; i < request->new_action.action_motor_position.name.size(); i++){
+    for (size_t i = 0; i < request->new_action.action_motor_position.name.size(); i++){
         
         std::vector<double> one_dof{request->new_action.action_motor_position.position.at(i)};        
         jp.insert(std::make_pair(request->new_action.action_motor_position.name.at(i),
                                  one_dof));
     }
     
-    for (int i = 0; i < request->new_action.action_motor_count.name.size(); i++){
+    for (size_t i = 0; i < request->new_action.action_motor_count.name.size(); i++){
         
         jic.insert(std::make_pair(request->new_action.action_motor_count.name.at(i),
                                   request->new_action.action_motor_count.count.at(i)));
     }
     
-    for (int i = 0; i< request->new_action.elements_involved.size(); i++) {
+    for (size_t i = 0; i< request->new_action.elements_involved.size(); i++) {
         
         elementInvolved.insert(request->new_action.elements_involved.at(i));  
     }
     
     //costructor will handle jpc and elementInvolved also if empty
-    try { newAction = std::make_shared<ROSEE::ActionGeneric>(request->new_action.action_name,
+    try { 
+        newAction = std::make_shared<ROSEE::ActionGeneric>(request->new_action.action_name,
                                                              jp,
                                                              jic,
                                                              elementInvolved);
     
-    } catch (const ROSEE::Utils::DifferentKeysException<ROSEE::JointPos, ROSEE::JointsInvolvedCount>) {
+    } catch (const ROSEE::Utils::DifferentKeysException<ROSEE::JointPos, ROSEE::JointsInvolvedCount>&) {
         
         response->error_msg = "action_motor_position and action_motor_count have different names element. They must be the same because they refer to actuator of the end-effector";
         RCLCPP_ERROR_STREAM (_node->get_logger(), "[RosServiceHandler " << __func__ << " ] " << response->error_msg);

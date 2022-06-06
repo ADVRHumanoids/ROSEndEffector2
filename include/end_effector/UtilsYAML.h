@@ -24,8 +24,8 @@ static Eigen::MatrixXd yamlMatrixToEigen(const YAML::Node &matrixNode) {
 
     Eigen::MatrixXd eigenMat(stdMat.size(), stdMat.at(0).size());
     
-    for (int iRow = 0; iRow<stdMat.size(); iRow++) {
-        for (int iCol = 0; iCol<stdMat.at(0).size(); iCol++) {
+    for (size_t iRow = 0; iRow<stdMat.size(); iRow++) {
+        for (size_t iCol = 0; iCol<stdMat.at(0).size(); iCol++) {
             eigenMat(iRow, iCol) =  stdMat.at(iRow).at(iCol);
         }
     }
@@ -43,7 +43,7 @@ static Eigen::VectorXd yamlVectorToEigen(const YAML::Node &vectorNode) {
 
     Eigen::VectorXd eigenVec(stdVect.size());
     
-    for (int i = 0; i<stdVect.size(); i++) {
+    for (size_t i = 0; i<stdVect.size(); i++) {
         eigenVec(i) =  stdVect.at(i);
     }
     

@@ -21,6 +21,8 @@
 #include <yaml-cpp/yaml.h>
 #include <end_effector/Utils.h>
 
+#include <algorithm>
+
 
 namespace ROSEE {
 

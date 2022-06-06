@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.5)
 project(end_effector)
 
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-#   add_compile_options(-Wall -Wextra -Wpedantic)
+   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
 option(BUILD_TESTING "Build tests" ON)
@@ -25,7 +25,6 @@ find_package(srdfdom REQUIRED)
 find_package(kdl_parser REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rosee_msg REQUIRED)
-find_package(Boost REQUIRED filesystem system)
 find_package(pluginlib REQUIRED)
                                                                                                                                                   
 find_package(Eigen3 REQUIRED)
@@ -225,13 +224,11 @@ if (${matlogger2_FOUND})
     target_link_libraries(EEHalExecutor
         EEHalPlugin
         matlogger2::matlogger2
-        ${Boost_LIBRARIES}
     )
     
 else()
     target_link_libraries(EEHalExecutor
         EEHalPlugin
-        ${Boost_LIBRARIES}
     )
 endif(${matlogger2_FOUND})
 
@@ -335,8 +332,7 @@ if(BUILD_TESTING)
     target_link_libraries(EEInterface_test
                                            ROSEEParser
                                            ROSEEInterface
-                                           gtest
-                                            ${Boost_LIBRARIES})
+                                           gtest)
                                            
     add_executable(FindPinches_test test/test_find_pinches.cpp)
     ament_target_dependencies(FindPinches_test
@@ -387,8 +383,7 @@ if(BUILD_TESTING)
                                               ROSEEYamlWorker
                                               ROSEEParser
                                               ROSEEInterface
-                                              ROSEEFindActions
-                                              ROSEEMapActionHandler)  
+                                              ROSEEFindActions)  
                                               
     add_executable(ServiceHandler_test test/test_service_handler.cpp)
     ament_target_dependencies(ServiceHandler_test

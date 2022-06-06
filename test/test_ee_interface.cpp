@@ -7,7 +7,6 @@
 
 #include <end_effector/Parser.h>
 #include <end_effector/EEInterface.h>
-#include <end_effector/Utils.h>
 
 namespace {
 

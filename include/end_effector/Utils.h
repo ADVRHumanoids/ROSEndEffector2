@@ -24,7 +24,7 @@
 #include <dlfcn.h>
 
 //to find relative path for the config files and create directories
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <fstream>
 
 #include <chrono>
@@ -37,8 +37,8 @@ namespace Utils
 {
     
 static bool create_directory(std::string pathDirectory){
-    boost::filesystem::path path(pathDirectory);
-    return boost::filesystem::create_directories(path);
+    std::filesystem::path path(pathDirectory);
+    return std::filesystem::create_directories(path);
 }
 
 static void out2file ( std::string pathFile, std::string output) {
@@ -54,20 +54,20 @@ static void out2file ( std::string pathFile, std::string output) {
 
 static std::vector <std::string> getFilesInDir ( std::string pathFolder ) {
     
-    boost::filesystem::path p (pathFolder);
+    std::filesystem::path p (pathFolder);
     std::vector <std::string> retVect;
     
-    if (! boost::filesystem::exists(p) ) {
+    if (! std::filesystem::exists(p) ) {
         std::cerr << "[ERROR " << __func__ << "] path '" << pathFolder << "' does not exists" << std::endl;
         return retVect;
     }
     
-    if (! boost::filesystem::is_directory(p)){ 
+    if (! std::filesystem::is_directory(p)){ 
         std::cerr << "[ERROR " << __func__ << "] path '" << pathFolder << "' is not a directory" << std::endl;
         return retVect;
     }
     
-    for (boost::filesystem::directory_entry& x : boost::filesystem::directory_iterator(p)) {
+    for (const std::filesystem::directory_entry& x : std::filesystem::directory_iterator{p}) {
         retVect.push_back (x.path().filename().string() );
     }
     

@@ -46,7 +46,7 @@ ROSEE::JointPos ROSEE::operator * ( ROSEE::JointPos jp,  double multiplier ) {
 ROSEE::JointPos& ROSEE::operator *= ( ROSEE::JointPos& jp, double multiplier) {
     
     for ( auto &jsEl : jp) {
-        for (int i = 0; i< jsEl.second.size(); i++) {
+        for (size_t i = 0; i< jsEl.second.size(); i++) {
             jsEl.second.at(i) *= multiplier;
         }
     }
@@ -70,7 +70,7 @@ ROSEE::JointPos& ROSEE::operator += (ROSEE::JointPos& jp1, ROSEE::JointPos jp2) 
             throw "Dofs not same";
         }
 
-        for (int i = 0; i < jsEl.second.size(); i++) {
+        for (size_t i = 0; i < jsEl.second.size(); i++) {
             jsEl.second.at(i) += jp2.at(jsEl.first).at(i); 
         }
     }
