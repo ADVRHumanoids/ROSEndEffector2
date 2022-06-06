@@ -2,8 +2,8 @@
 Changelog for package end_effector
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.3 (2022-06-06)
+------------------
 * c++17 to remove boost dep && some solved warnings
 * Contributors: Davide Torielli
 
