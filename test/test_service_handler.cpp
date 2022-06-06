@@ -60,7 +60,7 @@ protected:
     std::unique_ptr<ROSEE::TestUtils::Process> roseeExecutor;
 
     template <class clientType>
-    bool initClient( std::shared_ptr<rclcpp::Client<clientType>> rosee_client, std::string serviceName) {
+    bool initClient( std::shared_ptr<rclcpp::Client<clientType>> &rosee_client, std::string serviceName) {
 
         rosee_client = node->create_client<clientType>(serviceName);
 
@@ -93,10 +93,7 @@ TEST_F ( testServiceHandler, callNewAction ) {
     auto newActionSrv = std::make_shared<rosee_msg::srv::NewGenericGraspingActionSrv::Request>();
 
     //empty request, error
-                std::cout << "BBBBBBBBBBBBBBBBBBBBBBBBBBBBB" << std::endl;
-
     auto result = rosee_client->async_send_request(newActionSrv);
-            std::cout << "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC" << std::endl;
     std::cout << rclcpp::spin_until_future_complete(node, result) << std::endl;
     //EXPECT_EQ( rclcpp::spin_until_future_complete(node, result), rclcpp::FutureReturnCode::SUCCESS);
     EXPECT_FALSE( result.get()->accepted );

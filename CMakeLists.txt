@@ -387,7 +387,8 @@ if(BUILD_TESTING)
                                               ROSEEYamlWorker
                                               ROSEEParser
                                               ROSEEInterface
-                                              ROSEEFindActions)  
+                                              ROSEEFindActions
+                                              ROSEEMapActionHandler)  
                                               
     add_executable(ServiceHandler_test test/test_service_handler.cpp)
     ament_target_dependencies(ServiceHandler_test
@@ -402,19 +403,19 @@ if(BUILD_TESTING)
                                               ROSEERosServiceHandler)  
     
     list(APPEND testsExecutable 
-#        EEInterface_test 
-#         FindPinches_test 
-#         FindTrigs_test 
-#         ComposedAction_test 
-#         TimedAction_test
-#         SendAction_test 
+        EEInterface_test 
+         FindPinches_test 
+         FindTrigs_test 
+         ComposedAction_test 
+         TimedAction_test
+         SendAction_test 
          ServiceHandler_test
     )
     list(APPEND handsForTests
          test_ee 
-#         test_ee_spread 
-#         two_finger 
-#         two_finger_mimic
+         test_ee_spread 
+         two_finger 
+         two_finger_mimic
     )
     
     #run each test with each hand

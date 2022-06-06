@@ -56,7 +56,7 @@ protected:
         ROSEE::Parser p ( node );
         if (! p.init ( ament_index_cpp::get_package_share_directory("end_effector") + "/configs/urdf/" + robot_name + ".urdf",
                        ament_index_cpp::get_package_share_directory("end_effector") + "/configs/srdf/" + robot_name + ".srdf",
-                       std::string(std::getenv("HOME")) + "/ROSEE2/actions/tests/"+robot_name+ "/") ) 
+                       std::string(std::getenv("HOME")) + "/.ROSEE2/actions/"+robot_name+ "/") ) 
         {
             
             std::cout << "[TEST SEND ACTIONS] parser FAIL: some config file missing]" << std::endl;
@@ -155,7 +155,7 @@ void testSendAction::setMainNode() {
 
     //TODO put a checkReady service instead of sleeping?
     sleep(5); // lets wait for test_rosee_startup to be ready
-    std::string topic_name_js = "/ros_end_effector/joint_states";    
+    std::string topic_name_js = "/joint_states";    
     
     receiveRobStateSub = node->create_subscription<sensor_msgs::msg::JointState>(topic_name_js, 1, std::bind(&ClbkHelper::jointStateClbk, &clbkHelper, _1));
     
