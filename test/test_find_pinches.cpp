@@ -204,7 +204,7 @@ TEST_F ( testFindPinches, checkEmitParse ) {
                 ASSERT_EQ ( joint.second.size(), 
                             pinchMap.at(keyPair).getAllJointPos().at(i).at(joint.first).size() );
                 //loop the eventually multiple joint pos (when dofs > 1)
-                for (int j=0; j<joint.second.size(); ++j){
+                for (size_t j=0; j<joint.second.size(); ++j){
                     EXPECT_DOUBLE_EQ ( joint.second.at(j),
                         pinchMap.at(keyPair).getAllJointPos().at(i).at(joint.first).at(j) ); 
                 }
@@ -382,7 +382,7 @@ TEST_F ( testFindPinches, checkEmitParseLoose ) {
                 ASSERT_EQ ( joint.second.size(), 
                             pinchLooseMap.at(keyPair).getAllJointPos().at(i).at(joint.first).size() );
                 //loop the eventually multiple joint pos (when dofs > 1)
-                for (int j=0; j<joint.second.size(); ++j){
+                for (size_t j=0; j<joint.second.size(); ++j){
                     EXPECT_DOUBLE_EQ ( joint.second.at(j),
                         pinchLooseMap.at(keyPair).getAllJointPos().at(i).at(joint.first).at(j) ); 
                 }

@@ -78,7 +78,7 @@ TEST_F ( testFindTrigs, checkNumberLinks ) {
     
     SetUp(argc_g, argv_g);
     
-    for (int k = 0; k< trigMap.size(); ++k) {
+    for (size_t k = 0; k< trigMap.size(); ++k) {
         for (auto &mapEl: trigMap.at(k) ) {
             
             //the .first has always dimension 1
@@ -99,7 +99,7 @@ TEST_F ( testFindTrigs, checkSizeStatesInfoSet ) {
     
     SetUp(argc_g, argv_g);
     
-    for (int k = 0; k< trigMap.size(); ++k) {
+    for (size_t k = 0; k< trigMap.size(); ++k) {
 
         for (auto &mapEl: trigMap.at(k) ) {
             
@@ -125,7 +125,7 @@ TEST_F ( testFindTrigs, checkNameTypeConsistency ) {
     
     SetUp(argc_g, argv_g);
     
-    for (int k = 0; k < trigMap.size(); ++k) {
+    for (size_t k = 0; k < trigMap.size(); ++k) {
         
         ROSEE::ActionPrimitive::Type actionType = trigMap.at(k).begin()->second.getPrimitiveType();
         
@@ -175,7 +175,7 @@ TEST_F ( testFindTrigs, checkEmitParse ) {
     
     SetUp(argc_g, argv_g);
     
-    for (int k = 0; k< trigMap.size(); ++k) {
+    for (size_t k = 0; k< trigMap.size(); ++k) {
     
         ASSERT_EQ (trigMap.at(k).size(), trigParsedMap.at(k).size() );
         
@@ -205,7 +205,7 @@ TEST_F ( testFindTrigs, checkEmitParse ) {
                 for (auto joint : jointStates) {
                     ASSERT_EQ ( joint.second.size(), trigMap.at(k).at(key).getJointPos().at(joint.first).size() );
                     //loop the eventually multiple joint pos (when dofs > 1)
-                    for (int j=0; j<joint.second.size(); ++j){
+                    for (size_t j=0; j<joint.second.size(); ++j){
                         EXPECT_DOUBLE_EQ ( joint.second.at(j),
                             trigMap.at(k).at(key).getJointPos().at(joint.first).at(j) ); 
                     }
@@ -345,7 +345,7 @@ TEST_F ( testFindTrigs, checkFlexsSingleJoint ) {
     
     SetUp(argc_g, argv_g);
     
-    for (int k = 0; k< trigMap.size(); ++k) {
+    for (size_t k = 0; k< trigMap.size(); ++k) {
         
         if ( trigMap.at(k).begin()->second.getPrimitiveType() == ROSEE::ActionPrimitive::Type::Trig ) {
             continue;

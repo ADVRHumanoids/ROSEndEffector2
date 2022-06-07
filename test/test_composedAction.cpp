@@ -94,7 +94,7 @@ TEST_F ( testComposedAction, checkEmitParse ) {
             //compare size of joint (number of dofs)
             ASSERT_EQ (joint.second.size(), graspParsed.getJointPos().at(joint.first).size() );
             //loop the eventually multiple joint pos (when dofs > 1)
-            for (int j = 0; j < joint.second.size(); ++j ){
+            for (size_t j = 0; j < joint.second.size(); ++j ){
                 EXPECT_DOUBLE_EQ ( joint.second.at(j), graspParsed.getJointPos().at(joint.first).at(j) ); 
             }     
         }

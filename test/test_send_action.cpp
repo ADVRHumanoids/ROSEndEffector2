@@ -212,7 +212,7 @@ void testSendAction::testAction(ROSEE::Action::Ptr actionSent, double percentage
 
     
     //finally, lets test if the pos set in the actions are the same of the robot when the action is completed
-    for (int i=0; i < clbkHelper.js.name.size(); i++) {
+    for (size_t i=0; i < clbkHelper.js.name.size(); i++) {
         
         auto wantedJointsPosMap = actionSent->getJointPos();
         
@@ -274,7 +274,7 @@ TEST_F ( testSendAction, sendSimpleGeneric ) {
     
     ASSERT_FALSE (actJoints.empty());
     
-    for (int i = 0; i<actJoints.size(); i++) {
+    for (size_t i = 0; i<actJoints.size(); i++) {
                 
         int id = -1;
         ee->getInternalIdForJoint(actJoints.at(i), id);
@@ -307,7 +307,7 @@ TEST_F ( testSendAction, sendSimpleGeneric2 ) {
     
     ASSERT_FALSE (actJoints.empty());
     
-    for (int i = 0; i<actJoints.size(); i++) {
+    for (size_t i = 0; i<actJoints.size(); i++) {
                 
         int id = -1;
         ee->getInternalIdForJoint(actJoints.at(i), id);
@@ -340,7 +340,7 @@ TEST_F ( testSendAction, sendSimpleGeneric3 ) {
     
     ASSERT_FALSE (actJoints.empty());
     
-    for (int i = 0; i<actJoints.size(); i++) {
+    for (size_t i = 0; i<actJoints.size(); i++) {
                 
         int id = -1;
         ee->getInternalIdForJoint(actJoints.at(i), id);
@@ -391,7 +391,7 @@ TEST_F ( testSendAction, sendTrig ) {
             //at O single dof joint
             double bigBound = parserMoveIt->getBiggerBoundFromZero(jointName).at(0);
             
-            for (int k = 0; k<clbkHelper.js.name.size(); k++) {
+            for (size_t k = 0; k<clbkHelper.js.name.size(); k++) {
                 
                 if (clbkHelper.js.name[i].compare(jointName) == 0 ) {
                     EXPECT_NEAR(bigBound, clbkHelper.js.position[i], 0.02);
@@ -433,7 +433,7 @@ TEST_F ( testSendAction, sendTipFlex ) {
         //at O single dof joint
         double bigBound = parserMoveIt->getBiggerBoundFromZero(jointInvolved).at(0);
         
-        for (int k = 0; k<clbkHelper.js.name.size(); k++) {
+        for (size_t k = 0; k<clbkHelper.js.name.size(); k++) {
             
             if (clbkHelper.js.name[i].compare(jointInvolved) == 0 ) {
                 EXPECT_NEAR(bigBound, clbkHelper.js.position[i], 0.02);
@@ -475,7 +475,7 @@ TEST_F ( testSendAction, sendFingFlex ) {
         //at O single dof joint
         double bigBound = parserMoveIt->getBiggerBoundFromZero(jointInvolved).at(0);
         
-        for (int k = 0; k<clbkHelper.js.name.size(); k++) {
+        for (size_t k = 0; k<clbkHelper.js.name.size(); k++) {
             
             if (clbkHelper.js.name[i].compare(jointInvolved) == 0 ) {
                 EXPECT_NEAR(bigBound, clbkHelper.js.position[i], 0.02);

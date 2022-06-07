@@ -398,7 +398,7 @@ if(BUILD_TESTING)
                                               ROSEERosServiceHandler)  
     
     list(APPEND testsExecutable 
-        EEInterface_test 
+         EEInterface_test 
          FindPinches_test 
          FindTrigs_test 
          ComposedAction_test 

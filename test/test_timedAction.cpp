@@ -140,7 +140,7 @@ TEST_F ( testTimedAction, checkEmitParse ) {
             //compare size of joint (number of dofs)
             ASSERT_EQ (joint.second.size(), timedActionParsed->getJointPos().at(joint.first).size() );
             //loop the eventually multiple joint pos (when dofs > 1)
-            for (int j = 0; j < joint.second.size(); ++j ){
+            for (size_t j = 0; j < joint.second.size(); ++j ){
                 EXPECT_DOUBLE_EQ ( joint.second.at(j), timedActionParsed->getJointPos().at(joint.first).at(j) ); 
             }     
         }
@@ -160,7 +160,7 @@ TEST_F ( testTimedAction, checkEmitParse ) {
         }
 
         auto jpvector = timedAction.getAllJointPos();
-        for (int i=0; i < jpvector.size(); i++) {
+        for (size_t i=0; i < jpvector.size(); i++) {
             
             for (auto joint: jpvector.at(i) ) {
                 
@@ -169,14 +169,14 @@ TEST_F ( testTimedAction, checkEmitParse ) {
                 ASSERT_EQ (joint.second.size(), otherjointPos.size() );
                 
                 //loop the eventually multiple joint pos (when dofs > 1)
-                for (int j = 0; j < joint.second.size(); ++j ){
+                for (size_t j = 0; j < joint.second.size(); ++j ){
                     EXPECT_DOUBLE_EQ ( joint.second.at(j), otherjointPos.at(j) ); 
                 } 
             }
         }
         
         auto jpcvector = timedAction.getAllJointCountAction();
-        for (int i=0; i < jpcvector.size(); i++) {
+        for (size_t i=0; i < jpcvector.size(); i++) {
             
             for (auto joint: jpcvector.at(i) ) {
                 

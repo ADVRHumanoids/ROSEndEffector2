@@ -101,6 +101,7 @@ Process::~Process()
  */
 rclcpp::Node::SharedPtr prepareROSForTests ( int argc, char **argv, std::string testName ) {
     
+    (void) argc;
     auto node = rclcpp::Node::make_shared(testName);
     
     //fill ros param with file models, needed by moveit parserMoveIt
