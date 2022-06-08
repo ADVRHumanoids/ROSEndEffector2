@@ -59,7 +59,7 @@ public:
      */
     enum Type {PinchTight, PinchLoose, MultiplePinchTight, Trig, TipFlex, FingFlex, SingleJointMultipleTips, None};
     /* destructor of base must be virtual */
-    virtual ~ActionPrimitive() {};
+    virtual ~ActionPrimitive() {}
 
     /* virtual and not getters */
     Type getPrimitiveType() const;

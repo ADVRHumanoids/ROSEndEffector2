@@ -61,10 +61,10 @@ Process::Process(std::vector<std::string>  args):
 
     if(_pid == 0)
     {
-        std::vector<std::string> source_args{ament_index_cpp::get_package_prefix("end_effector") + "/../setup.bash"};
-        char** source_args_char = (char**)source_args.data();
+        //std::vector<std::string> source_args{ament_index_cpp::get_package_prefix("end_effector") + "/../setup.bash"};
+       // char** source_args_char = (char**)source_args.data();
         
-        ::execvp("source", source_args_char);
+        //::execvp("source", source_args_char);
         ::execvp(argv[0], argv);
         perror("execvp");
         throw std::runtime_error("Unknown command");
