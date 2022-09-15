@@ -139,7 +139,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/base_heri_ii.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/base_heri_ii.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -148,7 +148,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/base_heri_ii.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/base_heri_ii.STL"/>
       </geometry>
     </collision>
   </link>
@@ -185,28 +185,32 @@
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link"/>
     <child link="motor_finger1_virtual_link"/>
-    <limit effort="10" lower="0" upper="2.5" velocity="1"/>
+    <!--<limit effort="10" lower="0" upper="2.5" velocity="1"/>-->
+    <limit effort="10" lower="0" upper="0.9" velocity="1"/>
     <dynamics damping="0.003" friction="0.003"/>
   </joint>
   <joint name="motor_finger2" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link"/>
     <child link="motor_finger2_virtual_link"/>
-    <limit effort="10" lower="0" upper="2.5" velocity="1"/>
+    <!--<limit effort="10" lower="0" upper="2.5" velocity="1"/>-->
+    <limit effort="10" lower="0" upper="0.9" velocity="1"/>
     <dynamics damping="0.003" friction="0.003"/>
   </joint>
   <joint name="motor_finger3" type="revolute">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="base_link"/>
     <child link="motor_finger3_virtual_link"/>
-    <limit effort="10" lower="0" upper="2.5" velocity="1"/>
+    <!--<limit effort="10" lower="0" upper="2.5" velocity="1"/>-->
+    <limit effort="10" lower="0" upper="0.9" velocity="1"/>
     <dynamics damping="0.003" friction="0.003"/>
   </joint>
   <joint name="motor_thumb" type="revolute">
     <origin rpy="1.5708 -1.5708 0" xyz="7.6421E-05 -0.031634 0.1213"/>
     <parent link="base_link"/>
     <child link="motor_thumb_virtual_link"/>
-    <limit effort="10" lower="0" upper="2" velocity="1"/>
+    <!--<limit effort="10" lower="0" upper="2" velocity="1"/>-->
+    <limit effort="10" lower="0" upper="1.3" velocity="1"/>
     <dynamics damping="0.003" friction="0.003"/>
   </joint>
   <!-- ///////////////////////////////////////   Base_Link of the short_finger   ////////////////////////////////////////// -->
@@ -219,7 +223,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/SFB1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/SFB1.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -228,7 +232,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/SFB1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/SFB1.STL"/>
       </geometry>
     </collision>
   </link>
@@ -251,7 +255,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/SFB1_1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/SFB1_1.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -260,7 +264,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/SFB1_1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/SFB1_1.STL"/>
       </geometry>
     </collision>
   </link>
@@ -297,7 +301,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/SFP1_2.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/SFP1_2.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -306,7 +310,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/SFP1_2.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/SFP1_2.STL"/>
       </geometry>
     </collision>
   </link>
@@ -344,7 +348,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFB1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFB1.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -353,7 +357,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFB1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFB1.STL"/>
       </geometry>
     </collision>
   </link>
@@ -376,7 +380,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP1_1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP1_1.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -385,7 +389,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP1_1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP1_1.STL"/>
       </geometry>
     </collision>
   </link>
@@ -422,7 +426,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP1_2.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP1_2.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -431,7 +435,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP1_2.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP1_2.STL"/>
       </geometry>
     </collision>
   </link>
@@ -468,7 +472,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP1_3.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP1_3.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -477,7 +481,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP1_3.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP1_3.STL"/>
       </geometry>
     </collision>
   </link>
@@ -515,7 +519,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFB2.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFB2.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -524,7 +528,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFB2.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFB2.STL"/>
       </geometry>
     </collision>
   </link>
@@ -547,7 +551,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP2_1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP2_1.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -556,7 +560,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP2_1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP2_1.STL"/>
       </geometry>
     </collision>
   </link>
@@ -594,7 +598,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP2_2.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP2_2.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -603,7 +607,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP2_2.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP2_2.STL"/>
       </geometry>
     </collision>
   </link>
@@ -640,7 +644,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP2_3.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP2_3.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -649,7 +653,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP2_3.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP2_3.STL"/>
       </geometry>
     </collision>
   </link>
@@ -687,7 +691,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFB3.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFB3.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -696,7 +700,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFB3.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFB3.STL"/>
       </geometry>
     </collision>
   </link>
@@ -719,7 +723,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP3_1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP3_1.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -728,7 +732,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP3_1.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP3_1.STL"/>
       </geometry>
     </collision>
   </link>
@@ -765,7 +769,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP3_2.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP3_2.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -774,7 +778,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP3_2.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP3_2.STL"/>
       </geometry>
     </collision>
   </link>
@@ -811,7 +815,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP3_3.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP3_3.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.75294 0.75294 0.75294 1"/>
@@ -820,7 +824,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://iit_heri_ii_hand_description/description/meshes/heri_II/LFP3_3.STL"/>
+        <mesh filename="package://end_effector/configs/meshes/heri_II/LFP3_3.STL"/>
       </geometry>
     </collision>
   </link>

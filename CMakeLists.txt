@@ -315,6 +315,10 @@ install(FILES
   DESTINATION share/${PROJECT_NAME}/configs/srdf
 )
 
+install(DIRECTORY
+    configs/meshes/
+    DESTINATION share/${PROJECT_NAME}/configs/meshes
+)
 ##############
 ### Testing ##
 ##############
